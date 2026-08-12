@@ -297,7 +297,7 @@ export function CommandPalette({
             if (e.target === e.currentTarget) onOpenChange(false)
           }}
         >
-          <div className="absolute inset-0 bg-[#070908]/55 backdrop-blur-md" />
+          <div className="absolute inset-0 bg-[#0b0e12]/55 backdrop-blur-md" />
 
           <motion.div
             role="dialog"

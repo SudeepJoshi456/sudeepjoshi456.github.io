@@ -67,18 +67,18 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
     <AnimatePresence>
       {visible ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[#070908] text-[#e8efe9]"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[#0b0e12] text-[#e8edf3]"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.45 }}
         >
           <motion.div
-            className="absolute inset-y-0 left-0 w-1/2 border-r border-white/10 bg-[linear-gradient(90deg,#0a0e0c,#121816)]"
+            className="absolute inset-y-0 left-0 w-1/2 border-r border-white/10 bg-[linear-gradient(90deg,#0a0d11,#141a22)]"
             animate={phase === 'open' ? { x: '-105%' } : { x: 0 }}
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           />
           <motion.div
-            className="absolute inset-y-0 right-0 w-1/2 border-l border-white/10 bg-[linear-gradient(270deg,#0a0e0c,#121816)]"
+            className="absolute inset-y-0 right-0 w-1/2 border-l border-white/10 bg-[linear-gradient(270deg,#0a0d11,#141a22)]"
             animate={phase === 'open' ? { x: '105%' } : { x: 0 }}
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           />
@@ -95,7 +95,7 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="mb-6 font-display text-xs font-semibold uppercase tracking-[0.12em] text-[#9aada0]"
+              className="mb-6 font-display text-xs font-semibold uppercase tracking-[0.12em] text-[#8b97a6]"
             >
               secure entry
             </motion.p>
@@ -104,7 +104,7 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
               initial={{ opacity: 0, letterSpacing: '0.12em', filter: 'blur(8px)' }}
               animate={{ opacity: 1, letterSpacing: '-0.02em', filter: 'blur(0px)' }}
               transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-3xl font-bold text-[#edf2ee] sm:text-4xl"
+              className="font-display text-3xl font-bold text-[#e8edf3] sm:text-4xl"
             >
               {profile.name}
             </motion.h1>
@@ -113,16 +113,16 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45, duration: 0.5 }}
-              className="mt-3 font-body text-sm text-[#9aada0]"
+              className="mt-3 font-body text-sm text-[#9aa6b5]"
             >
               entering professional vault
             </motion.p>
 
             <div className="mx-auto mt-10 h-[2px] w-full max-w-xs overflow-hidden rounded-full bg-white/10">
-              <motion.div className="h-full origin-left bg-[#7ddea8]" style={{ scaleX: progress }} />
+              <motion.div className="h-full origin-left bg-[#9eb0c4]" style={{ scaleX: progress }} />
             </div>
 
-            <div className="mt-6 min-h-[1.5rem] font-mono text-xs text-[#7ddea8]">
+            <div className="mt-6 min-h-[1.5rem] font-mono text-xs text-[#9eb0c4]">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={steps[Math.min(step, steps.length - 1)]}
@@ -141,7 +141,7 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
             <button
               type="button"
               onClick={skip}
-              className="mt-10 font-display text-xs font-semibold uppercase tracking-[0.1em] text-[#7d8a81] transition hover:text-[#edf2ee]"
+              className="mt-10 font-display text-xs font-semibold uppercase tracking-[0.1em] text-[#8b97a6] transition hover:text-[#e8edf3]"
             >
               skip
             </button>

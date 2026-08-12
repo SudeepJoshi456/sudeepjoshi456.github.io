@@ -185,7 +185,7 @@ export function CommandQuest({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[80] flex items-end justify-center bg-[#070908]/50 px-4 pb-6 backdrop-blur-sm sm:items-center sm:pb-0"
+          className="fixed inset-0 z-[80] flex items-end justify-center bg-[#0b0e12]/50 px-4 pb-6 backdrop-blur-sm sm:items-center sm:pb-0"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget && phase === 'open') close()
           }}
