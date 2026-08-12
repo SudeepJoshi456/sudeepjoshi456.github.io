@@ -201,39 +201,6 @@ export default function App() {
             </ul>
           </FadeIn>
 
-          <FadeIn delay={0.1} className="mt-12">
-            <nav className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-soft">
-              <button
-                type="button"
-                onClick={() => openDetail({ type: 'experience' })}
-                className="transition hover:text-accent"
-              >
-                Experience
-              </button>
-              <button
-                type="button"
-                onClick={() => openDetail({ type: 'education' })}
-                className="transition hover:text-accent"
-              >
-                Education
-              </button>
-              <button
-                type="button"
-                onClick={() => openDetail({ type: 'projects' })}
-                className="transition hover:text-accent"
-              >
-                Projects
-              </button>
-              <button
-                type="button"
-                onClick={() => openDetail({ type: 'skills' })}
-                className="transition hover:text-accent"
-              >
-                Skills
-              </button>
-            </nav>
-          </FadeIn>
-
           <FadeIn delay={0.12} className="mt-8 border-t border-line/80 pt-6">
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-mute">
               <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="hover:text-accent">
