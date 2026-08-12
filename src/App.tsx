@@ -28,7 +28,7 @@ function SectionRail({
 }) {
   return (
     <div className="mb-4 flex items-baseline justify-between gap-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">{label}</p>
+      <p className="vault-label">{label}</p>
       {action}
     </div>
   )
@@ -137,10 +137,8 @@ export default function App() {
         <div className="vault-shell__floor" aria-hidden />
         <header className="mx-auto flex max-w-lg items-center justify-between px-5 pt-7 sm:px-6">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
-              Professional vault
-            </p>
-            <h1 className="mt-1 font-display text-[15px] font-bold tracking-tight text-ink sm:text-base">
+            <p className="vault-label">Professional vault</p>
+            <h1 className="mt-1 font-display text-base font-bold tracking-tight text-ink sm:text-lg">
               {profile.name}
             </h1>
           </div>
@@ -149,7 +147,7 @@ export default function App() {
             <button
               type="button"
               onClick={toggle}
-              className="rounded-full border border-line px-2.5 py-1 text-[11px] text-mute transition hover:text-ink"
+              className="rounded-full border border-line px-2.5 py-1 text-xs text-mute transition hover:text-ink"
               aria-label={`Switch to ${theme === 'dark' ? 'daylight' : 'night'} vault lighting`}
             >
               {theme === 'dark' ? 'day' : 'night'}

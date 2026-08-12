@@ -49,10 +49,10 @@ export function QuestTracker({
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[70] flex justify-center px-3 pb-3">
       <div className="pointer-events-auto w-full max-w-lg rounded-xl border border-accent/35 bg-panel/95 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-md">
         <div className="mb-2 flex items-center justify-between gap-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+          <p className="vault-label vault-label--accent">
             Clearance · {progress}/{total}
           </p>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
+          <p className="vault-label">
             {progress >= total
               ? 'Complete'
               : `Next: ${missions[Math.min(progress, total - 1)]?.title}`}
@@ -70,21 +70,23 @@ export function QuestTracker({
                 }`}
               >
                 <span
-                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-bold ${
+                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
                     done ? 'bg-accent text-bg' : active ? 'bg-ink text-bg' : 'border border-line text-mute'
                   }`}
                 >
                   {done ? '✓' : mission.id}
                 </span>
                 <span className="min-w-0">
-                  <span className={`block text-xs font-semibold ${active ? 'text-ink' : 'text-ink-soft'}`}>
+                  <span className={`block text-sm font-semibold ${active ? 'text-ink' : 'text-ink-soft'}`}>
                     {mission.title}
                     {active ? (
-                      <span className="ml-1.5 text-[9px] uppercase tracking-wider text-accent">now</span>
+                      <span className="ml-1.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
+                        now
+                      </span>
                     ) : null}
                   </span>
                   {active ? (
-                    <span className="mt-0.5 block text-[11px] leading-snug text-mute">{mission.detail}</span>
+                    <span className="mt-0.5 block text-xs leading-snug text-mute">{mission.detail}</span>
                   ) : null}
                 </span>
               </li>
@@ -114,9 +116,7 @@ export function SealedVaultCard({ onOpen }: { onOpen: () => void }) {
           🔐
         </motion.span>
         <span className="min-w-0 flex-1">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-            Vault sealed
-          </span>
+          <span className="vault-label vault-label--accent">Vault sealed</span>
           <span className="mt-1 block text-sm font-semibold text-ink">
             Quest complete. Open the vault when you are ready.
           </span>
@@ -209,9 +209,7 @@ export function CommandQuest({
                   transition={{ duration: 0.2 }}
                   className="py-6 text-center"
                 >
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-                    Opening vault
-                  </p>
+                  <p className="vault-label vault-label--accent">Opening vault</p>
                   <div className="relative mx-auto mt-6 h-28 w-44 overflow-hidden rounded-xl border border-line bg-wash">
                     <motion.div
                       className="absolute inset-y-0 left-0 w-1/2 border-r border-line bg-panel"
@@ -245,9 +243,7 @@ export function CommandQuest({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
-                    Clearance granted
-                  </p>
+                  <p className="vault-label vault-label--accent">Clearance granted</p>
                   <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-ink">
                     <span aria-hidden className="mr-1.5">
                       🔐
@@ -298,9 +294,7 @@ export function CommandQuest({
                         className="overflow-hidden"
                       >
                         <div className="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-3">
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-                            Reach out via
-                          </p>
+                          <p className="vault-label vault-label--accent">Reach out via</p>
                           <div className="mt-2 grid grid-cols-2 gap-2">
                             <a
                               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(profile.email)}&su=${encodeURIComponent(selected.mailSubject)}`}
@@ -364,13 +358,13 @@ export function SearchPulse({
         ],
       }}
       transition={{ duration: 2.4, repeat: Infinity }}
-      className="inline-flex items-center gap-1.5 rounded-full border border-accent/35 bg-accent/12 px-2.5 py-1.5 text-[11px] text-accent"
+      className="inline-flex items-center gap-1.5 rounded-full border border-accent/35 bg-accent/12 px-2.5 py-1.5 text-xs text-accent"
     >
-      <span>Search</span>
+      <span className="font-display font-medium">Search</span>
       {!touch ? (
-        <kbd className="rounded border border-accent/35 bg-bg/70 px-1 py-0.5 text-[10px]">{shortcut}</kbd>
+        <kbd className="rounded border border-accent/35 bg-bg/70 px-1 py-0.5 font-body text-[10px]">{shortcut}</kbd>
       ) : (
-        <span className="rounded border border-accent/35 bg-bg/70 px-1 py-0.5 text-[10px]">tap</span>
+        <span className="rounded border border-accent/35 bg-bg/70 px-1 py-0.5 font-body text-[10px]">tap</span>
       )}
     </motion.button>
   )

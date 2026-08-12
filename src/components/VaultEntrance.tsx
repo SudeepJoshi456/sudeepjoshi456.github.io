@@ -95,14 +95,14 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="mb-6 text-[10px] uppercase tracking-[0.35em] text-[#7d8a81]"
+              className="mb-6 font-display text-xs font-semibold uppercase tracking-[0.12em] text-[#9aada0]"
             >
               secure entry
             </motion.p>
 
             <motion.h1
-              initial={{ opacity: 0, letterSpacing: '0.4em', filter: 'blur(8px)' }}
-              animate={{ opacity: 1, letterSpacing: '0.08em', filter: 'blur(0px)' }}
+              initial={{ opacity: 0, letterSpacing: '0.12em', filter: 'blur(8px)' }}
+              animate={{ opacity: 1, letterSpacing: '-0.02em', filter: 'blur(0px)' }}
               transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
               className="font-display text-3xl font-bold text-[#edf2ee] sm:text-4xl"
             >
@@ -113,7 +113,7 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45, duration: 0.5 }}
-              className="mt-3 text-sm text-[#9aada0]"
+              className="mt-3 font-body text-sm text-[#9aada0]"
             >
               entering professional vault
             </motion.p>
@@ -141,7 +141,7 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
             <button
               type="button"
               onClick={skip}
-              className="mt-10 text-[11px] uppercase tracking-[0.2em] text-[#7d8a81] transition hover:text-[#edf2ee]"
+              className="mt-10 font-display text-xs font-semibold uppercase tracking-[0.1em] text-[#7d8a81] transition hover:text-[#edf2ee]"
             >
               skip
             </button>

@@ -299,9 +299,7 @@ export function CommandPalette({
               <span className="h-1 w-10 rounded-full bg-line" />
             </div>
             <div className="border-b border-line px-4 pt-3 sm:pt-3.5">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
-                Vault index
-              </p>
+              <p className="vault-label">Vault index</p>
             </div>
             <div className="relative flex items-center gap-3 border-b border-line px-4 py-3.5">
               <IconTile className="border-accent/30 bg-accent/10 text-accent">
@@ -354,9 +352,7 @@ export function CommandPalette({
               ) : (
                 grouped.map(([group, groupItems]) => (
                   <div key={group} className="mb-2">
-                    <p className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
-                      {group}
-                    </p>
+                    <p className="vault-label vault-label--quiet px-3 py-1.5">{group}</p>
                     <ul>
                       {groupItems.map((item) => {
                         flatIndex += 1
@@ -379,8 +375,8 @@ export function CommandPalette({
                               }`}
                             >
                               {item.icon}
-                              <span className="min-w-0 flex-1">
-                                <span className="block text-sm font-medium">{item.title}</span>
+                                <span className="min-w-0 flex-1">
+                                <span className="block font-display text-sm font-medium">{item.title}</span>
                                 {item.subtitle ? (
                                   <span className="mt-0.5 block truncate text-xs text-mute">
                                     {item.subtitle}
@@ -405,7 +401,7 @@ export function CommandPalette({
               )}
             </div>
 
-            <div className="relative flex items-center justify-between gap-3 border-t border-line px-4 py-3 text-[11px] text-mute">
+            <div className="relative flex items-center justify-between gap-3 border-t border-line px-4 py-3 text-xs text-mute">
               <span className="sm:hidden">Tap a result to open</span>
               <span className="hidden sm:inline">↑↓ move, ↵ open, esc close</span>
               <button

@@ -24,9 +24,7 @@ function companyMark(company: string) {
 }
 
 function SectionLabel({ children }: { children: ReactNode }) {
-  return (
-    <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.18em] text-mute">{children}</p>
-  )
+  return <p className="vault-label mb-3">{children}</p>
 }
 
 function StackChips({ items }: { items: string[] }) {
@@ -35,7 +33,7 @@ function StackChips({ items }: { items: string[] }) {
       {items.map((item) => (
         <li
           key={item}
-          className="rounded-md border border-line bg-wash/80 px-2 py-1 text-[11px] text-ink-soft"
+          className="rounded-md border border-line bg-wash/80 px-2 py-1 text-xs text-ink-soft"
         >
           {item}
         </li>
@@ -238,9 +236,7 @@ export function DetailPanel({
             <div className="flex min-w-0 items-start gap-3">
               {icon}
               <div className="min-w-0">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
-                  {eyebrow}
-                </p>
+                <p className="vault-label">{eyebrow}</p>
                 <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-ink">{title}</h2>
               </div>
             </div>
