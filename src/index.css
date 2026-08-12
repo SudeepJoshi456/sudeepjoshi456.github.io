@@ -126,6 +126,81 @@ html.dark {
     transition: none;
   }
 
+  /* Brighter dots only in a bubble around the pointer (parted by motion) */
+  .site-backdrop__dots--wake {
+    inset: -35%;
+    background-image: radial-gradient(circle at center, var(--accent) 1.35px, transparent 1.45px);
+    background-size: 18px 18px;
+    opacity: 0;
+    will-change: transform, opacity;
+    mask-image: radial-gradient(
+      circle 150px at var(--spot-x, 50%) var(--spot-y, 35%),
+      #000 0%,
+      #000 28%,
+      transparent 72%
+    );
+    -webkit-mask-image: radial-gradient(
+      circle 150px at var(--spot-x, 50%) var(--spot-y, 35%),
+      #000 0%,
+      #000 28%,
+      transparent 72%
+    );
+  }
+
+  /* Soft luminous ball moving through the field */
+  .site-backdrop__orb {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 220px;
+    border-radius: 9999px;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, opacity;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent) 28%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 10%, transparent) 38%,
+      transparent 70%
+    );
+    mix-blend-mode: soft-light;
+  }
+
+  html.dark .site-backdrop__orb {
+    mix-blend-mode: screen;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent) 35%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 12%, transparent) 40%,
+      transparent 72%
+    );
+  }
+
+  .site-backdrop__shine {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 9999px;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, opacity;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-bright) 55%, white 20%) 0%,
+      color-mix(in srgb, var(--accent) 25%, transparent) 45%,
+      transparent 75%
+    );
+    box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 35%, transparent);
+    mix-blend-mode: soft-light;
+  }
+
+  html.dark .site-backdrop__shine {
+    mix-blend-mode: screen;
+  }
+
   .site-backdrop__wash {
     position: absolute;
     inset: 0;
