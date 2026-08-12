@@ -36,9 +36,12 @@ const highlights = [
 ]
 
 const QUEST_TOTAL = 3
+const QUEST_KEY = 'vault-quest-v2'
+const QUEST_DONE_KEY = 'vault-quest-v2-done'
+const QUEST_CELEBRATED_KEY = 'vault-quest-v2-celebrated'
 
 function readQuestProgress() {
-  const n = Number(localStorage.getItem('vault-quest') || '0')
+  const n = Number(localStorage.getItem(QUEST_KEY) || '0')
   return Number.isFinite(n) ? Math.min(QUEST_TOTAL, Math.max(0, n)) : 0
 }
 
@@ -57,13 +60,15 @@ export default function App() {
   const shortcut = useShortcutLabel()
   const unlocked = questProgress >= QUEST_TOTAL
 
-  const bumpQuest = useCallback((atLeast: number) => {
+  /** Only advance one step at a time, in order. */
+  const completeMission = useCallback((mission: 1 | 2 | 3) => {
     setQuestProgress((prev) => {
-      const next = Math.max(prev, atLeast)
-      localStorage.setItem('vault-quest', String(next))
-      if (next >= QUEST_TOTAL && prev < QUEST_TOTAL) {
-        localStorage.setItem('vault-quest-done', '1')
-        if (localStorage.getItem('vault-celebrated') !== '1') {
+      if (mission !== prev + 1) return prev
+      const next = prev + 1
+      localStorage.setItem(QUEST_KEY, String(next))
+      if (next >= QUEST_TOTAL) {
+        localStorage.setItem(QUEST_DONE_KEY, '1')
+        if (localStorage.getItem(QUEST_CELEBRATED_KEY) !== '1') {
           setShowCelebrate(true)
           setShowQuest(false)
         }
@@ -80,19 +85,19 @@ export default function App() {
   const openPalette = useCallback(() => {
     setPaletteOpen(true)
     setShowQuest(false)
-    bumpQuest(1)
-  }, [bumpQuest])
+    completeMission(1)
+  }, [completeMission])
 
   const togglePalette = useCallback(() => {
     setPaletteOpen((open) => {
       const next = !open
       if (next) {
         setShowQuest(false)
-        bumpQuest(1)
+        completeMission(1)
       }
       return next
     })
-  }, [bumpQuest])
+  }, [completeMission])
 
   useCommandMenu(togglePalette)
 
@@ -102,7 +107,7 @@ export default function App() {
 
   useEffect(() => {
     if (!vaultDone) return
-    if (localStorage.getItem('vault-quest-done') === '1') return
+    if (localStorage.getItem(QUEST_DONE_KEY) === '1') return
     const t = window.setTimeout(() => setShowQuest(true), 1200)
     return () => window.clearTimeout(t)
   }, [vaultDone])
@@ -110,20 +115,20 @@ export default function App() {
   const openDetail = useCallback(
     (view: Exclude<DetailView, null>) => {
       setDetail(view)
-      if (view.type === 'experience') bumpQuest(2)
-      if (view.type === 'about' || view.type === 'skills') bumpQuest(3)
+      if (view.type === 'experience') completeMission(2)
+      if (view.type === 'about' || view.type === 'skills') completeMission(3)
     },
-    [bumpQuest],
+    [completeMission],
   )
 
   const dismissQuest = () => {
     setShowQuest(false)
-    localStorage.setItem('vault-quest-dismissed', '1')
+    localStorage.setItem('vault-quest-v2-dismissed', '1')
   }
 
   const dismissCelebrate = () => {
     setShowCelebrate(false)
-    localStorage.setItem('vault-celebrated', '1')
+    localStorage.setItem(QUEST_CELEBRATED_KEY, '1')
   }
 
   return (
@@ -399,7 +404,7 @@ export default function App() {
         open={paletteOpen}
         onOpenChange={(open) => {
           setPaletteOpen(open)
-          if (open) bumpQuest(1)
+          if (open) completeMission(1)
         }}
         onOpenDetail={openDetail}
         onGoHome={() => setDetail(null)}
