@@ -219,7 +219,7 @@ export function DetailPanel({
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-40 flex justify-end bg-[#020617]/40 backdrop-blur-[2px]"
+        className="fixed inset-0 z-[60] flex justify-end bg-[#020617]/40 backdrop-blur-[2px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

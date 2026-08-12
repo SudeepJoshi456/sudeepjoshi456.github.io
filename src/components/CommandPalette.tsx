@@ -26,6 +26,7 @@ type CommandItem = {
   subtitle?: string
   keywords: string
   icon: ReactNode
+  keepOpen?: boolean
   run: () => void
 }
 
@@ -97,6 +98,7 @@ export function CommandPalette({
             <IconUser />
           </IconTile>
         ),
+        keepOpen: true,
         run: () => onOpenDetail({ type: 'about' }),
       },
       {
@@ -110,6 +112,7 @@ export function CommandPalette({
             <IconSpark />
           </IconTile>
         ),
+        keepOpen: true,
         run: () => onOpenDetail({ type: 'skills' }),
       },
       {
@@ -173,6 +176,7 @@ export function CommandPalette({
         subtitle: `${job.metric}, ${job.dates}`,
         keywords: `${job.company} ${job.role} ${job.metric} ${job.stack.join(' ')} ${job.summary}`,
         icon: companyMark(job.company),
+        keepOpen: true,
         run: () => onOpenDetail({ type: 'experience', id: job.id }),
       })),
       ...projects.map((project) => ({
@@ -186,6 +190,7 @@ export function CommandPalette({
             <IconLayers />
           </IconTile>
         ),
+        keepOpen: true,
         run: () => onOpenDetail({ type: 'project', id: project.id }),
       })),
     ]
@@ -243,8 +248,9 @@ export function CommandPalette({
       }
       if (e.key === 'Enter' && items[active]) {
         e.preventDefault()
-        items[active].run()
-        onOpenChange(false)
+        const item = items[active]
+        item.run()
+        if (!item.keepOpen) onOpenChange(false)
       }
     }
 
@@ -359,7 +365,7 @@ export function CommandPalette({
                               onMouseEnter={() => setActive(index)}
                               onClick={() => {
                                 item.run()
-                                onOpenChange(false)
+                                if (!item.keepOpen) onOpenChange(false)
                               }}
                               className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-3 text-left transition sm:py-2.5 ${
                                 selected

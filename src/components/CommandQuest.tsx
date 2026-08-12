@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { profile } from '../data/content'
 import { useIsTouch, useShortcutLabel } from '../hooks/useDevice'
 
-type Mission = {
+export type Mission = {
   id: number
   title: string
   detail: string
@@ -18,30 +18,95 @@ type CommandQuestProps = {
   onDismissCelebrate: () => void
 }
 
-function missionsFor(touch: boolean, shortcut: string): Mission[] {
+export function getMissions(touch: boolean, shortcut: string): Mission[] {
   return [
     {
       id: 1,
       title: 'Open Search',
-      detail: touch ? 'Tap the Search button in the top right' : `Press ${shortcut} (or tap Search)`,
+      detail: touch ? 'Tap Search in the top right' : `Press ${shortcut} or tap Search`,
     },
     {
       id: 2,
-      title: 'Open an Experience',
-      detail: 'Tap Microsoft, Amazon, or any role to open details',
+      title: 'Open About & education',
+      detail: 'In Search, tap “About & education” (near the top)',
     },
     {
       id: 3,
-      title: 'Open About or Skills',
-      detail: 'Use Search, or tap About / Skills at the bottom',
+      title: 'Open an Experience',
+      detail: 'Still in Search, open any Microsoft / Amazon role',
     },
   ]
+}
+
+/** Always-visible checklist while the quest is active. */
+export function QuestTracker({
+  progress,
+  total,
+  visible,
+}: {
+  progress: number
+  total: number
+  visible: boolean
+}) {
+  const touch = useIsTouch()
+  const shortcut = useShortcutLabel()
+  const missions = getMissions(touch, shortcut)
+
+  if (!visible) return null
+
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[70] flex justify-center px-3 pb-3">
+      <div className="pointer-events-auto w-full max-w-lg rounded-xl border border-accent/35 bg-panel/95 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-md">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+            Vault quest · {progress}/{total}
+          </p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
+            {progress >= total
+              ? 'Complete'
+              : `Next: ${missions[Math.min(progress, total - 1)]?.title}`}
+          </p>
+        </div>
+        <ol className="space-y-1.5">
+          {missions.map((mission) => {
+            const done = progress >= mission.id
+            const active = !done && progress + 1 === mission.id
+            return (
+              <li
+                key={mission.id}
+                className={`flex items-start gap-2 rounded-lg px-2 py-1.5 text-left ${
+                  active ? 'bg-accent/15 ring-1 ring-accent/40' : done ? 'opacity-70' : 'opacity-45'
+                }`}
+              >
+                <span
+                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-bold ${
+                    done ? 'bg-accent text-bg' : active ? 'bg-ink text-bg' : 'border border-line text-mute'
+                  }`}
+                >
+                  {done ? '✓' : mission.id}
+                </span>
+                <span className="min-w-0">
+                  <span className={`block text-xs font-semibold ${active ? 'text-ink' : 'text-ink-soft'}`}>
+                    {mission.title}
+                    {active ? <span className="ml-1.5 text-[9px] uppercase tracking-wider text-accent">now</span> : null}
+                  </span>
+                  {active ? (
+                    <span className="mt-0.5 block text-[11px] leading-snug text-mute">{mission.detail}</span>
+                  ) : null}
+                </span>
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+    </div>
+  )
 }
 
 export function CommandQuest({
   open,
   progress,
-  total,
+  total: _total,
   celebrate,
   onOpenSearch,
   onDismiss,
@@ -49,8 +114,7 @@ export function CommandQuest({
 }: CommandQuestProps) {
   const touch = useIsTouch()
   const shortcut = useShortcutLabel()
-  const missions = missionsFor(touch, shortcut)
-  const current = Math.min(progress + 1, total)
+  const missions = getMissions(touch, shortcut)
 
   return (
     <AnimatePresence>
@@ -60,7 +124,7 @@ export function CommandQuest({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-40 flex items-end justify-center bg-[#020617]/45 px-4 pb-6 backdrop-blur-sm sm:items-center sm:pb-0"
+          className="fixed inset-0 z-[80] flex items-end justify-center bg-[#020617]/45 px-4 pb-6 backdrop-blur-sm sm:items-center sm:pb-0"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) onDismissCelebrate()
           }}
@@ -73,16 +137,9 @@ export function CommandQuest({
             className="relative w-full max-w-md overflow-hidden rounded-2xl border border-accent/40 bg-bg p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)]"
           >
             <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-accent/20 blur-2xl" />
-            <div className="pointer-events-none absolute -left-10 bottom-0 h-28 w-28 rounded-full bg-accent/10 blur-2xl" />
-
-            <motion.p
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.05, type: 'spring', stiffness: 260, damping: 18 }}
-              className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent"
-            >
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
               Clearance granted
-            </motion.p>
+            </p>
             <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-ink">
               You cleared the vault.
             </h2>
@@ -135,35 +192,10 @@ export function CommandQuest({
           className="fixed bottom-5 left-1/2 z-30 w-[min(94vw,26rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-accent/30 bg-panel shadow-[0_18px_60px_rgba(0,0,0,0.22)] backdrop-blur-xl"
         >
           <div className="p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
-                  Vault quest
-                </p>
-                <p className="mt-1 text-sm font-semibold text-ink">
-                  Complete {total} missions to unlock clearance
-                </p>
-                <p className="mt-1 text-xs text-mute">
-                  Now: Mission {Math.min(current, total)} of {total}
-                </p>
-              </div>
-              {!touch ? (
-                <motion.kbd
-                  animate={{
-                    scale: [1, 1.06, 1],
-                    boxShadow: [
-                      '0 0 0 0 rgba(8,145,178,0)',
-                      '0 0 0 6px rgba(8,145,178,0.15)',
-                      '0 0 0 0 rgba(8,145,178,0)',
-                    ],
-                  }}
-                  transition={{ duration: 2.2, repeat: Infinity }}
-                  className="rounded-lg border border-accent/40 bg-accent/10 px-2 py-1 font-mono text-xs text-accent"
-                >
-                  {shortcut}
-                </motion.kbd>
-              ) : null}
-            </div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">Vault quest</p>
+            <p className="mt-1 text-sm font-semibold text-ink">
+              Do these 3 steps in order. Search stays open while you explore.
+            </p>
 
             <ol className="mt-4 space-y-2">
               {missions.map((mission) => {
@@ -172,7 +204,7 @@ export function CommandQuest({
                 return (
                   <li
                     key={mission.id}
-                    className={`rounded-xl border px-3 py-2.5 transition ${
+                    className={`rounded-xl border px-3 py-2.5 ${
                       active
                         ? 'border-accent/50 bg-accent/12 ring-1 ring-accent/30'
                         : done

@@ -5,7 +5,7 @@ import {
   useCommandMenu,
   type DetailView,
 } from './components/CommandPalette'
-import { CommandQuest, SearchPulse } from './components/CommandQuest'
+import { CommandQuest, QuestTracker, SearchPulse } from './components/CommandQuest'
 import { CursorAura } from './components/CursorAura'
 import { DetailPanel } from './components/DetailPanel'
 import { FadeIn } from './components/FadeIn'
@@ -36,9 +36,9 @@ const highlights = [
 ]
 
 const QUEST_TOTAL = 3
-const QUEST_KEY = 'vault-quest-v2'
-const QUEST_DONE_KEY = 'vault-quest-v2-done'
-const QUEST_CELEBRATED_KEY = 'vault-quest-v2-celebrated'
+const QUEST_KEY = 'vault-quest-v3'
+const QUEST_DONE_KEY = 'vault-quest-v3-done'
+const QUEST_CELEBRATED_KEY = 'vault-quest-v3-celebrated'
 
 function readQuestProgress() {
   const n = Number(localStorage.getItem(QUEST_KEY) || '0')
@@ -71,6 +71,7 @@ export default function App() {
         if (localStorage.getItem(QUEST_CELEBRATED_KEY) !== '1') {
           setShowCelebrate(true)
           setShowQuest(false)
+          setPaletteOpen(false)
         }
       }
       return next
@@ -84,17 +85,13 @@ export default function App() {
 
   const openPalette = useCallback(() => {
     setPaletteOpen(true)
-    setShowQuest(false)
     completeMission(1)
   }, [completeMission])
 
   const togglePalette = useCallback(() => {
     setPaletteOpen((open) => {
       const next = !open
-      if (next) {
-        setShowQuest(false)
-        completeMission(1)
-      }
+      if (next) completeMission(1)
       return next
     })
   }, [completeMission])
@@ -115,8 +112,8 @@ export default function App() {
   const openDetail = useCallback(
     (view: Exclude<DetailView, null>) => {
       setDetail(view)
-      if (view.type === 'experience') completeMission(2)
-      if (view.type === 'about' || view.type === 'skills') completeMission(3)
+      if (view.type === 'about') completeMission(2)
+      if (view.type === 'experience') completeMission(3)
     },
     [completeMission],
   )
@@ -166,7 +163,7 @@ export default function App() {
           </div>
         </header>
 
-        <main className="mx-auto max-w-lg px-5 pb-28 pt-14 sm:px-6 sm:pt-20">
+        <main className="mx-auto max-w-lg px-5 pb-44 pt-14 sm:px-6 sm:pt-20">
           <FadeIn delay={0.02}>
             <p className="text-sm text-ink-soft">{profile.title}</p>
             <p className="mt-2 text-sm text-mute">{profile.school}</p>
@@ -193,8 +190,8 @@ export default function App() {
                       ? 'Next: Tap Search'
                       : `Next: Press ${shortcut}`
                     : questProgress === 1
-                      ? 'Next: Open an Experience'
-                      : 'Next: Open About or Skills'}
+                      ? 'Next: Open About & education in Search'
+                      : 'Next: Open an Experience in Search'}
                 </span>
                 <span className="mt-2 flex gap-1.5">
                   {Array.from({ length: QUEST_TOTAL }).map((_, i) => (
@@ -390,11 +387,17 @@ export default function App() {
         </main>
       </motion.div>
 
-      <CommandQuest
-        open={showQuest && !paletteOpen && !detail && !showCelebrate}
+      <QuestTracker
         progress={questProgress}
         total={QUEST_TOTAL}
-        celebrate={showCelebrate && !paletteOpen && !detail}
+        visible={vaultDone && !unlocked && !showCelebrate}
+      />
+
+      <CommandQuest
+        open={showQuest && !paletteOpen && !detail && !showCelebrate && !unlocked}
+        progress={questProgress}
+        total={QUEST_TOTAL}
+        celebrate={showCelebrate && !detail}
         onOpenSearch={openPalette}
         onDismiss={dismissQuest}
         onDismissCelebrate={dismissCelebrate}
