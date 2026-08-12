@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
-/** Vault lock cursor for fine pointers. Falls back to system cursor otherwise. */
+/** Futuristic radar-blip cursor for fine pointers. */
 export function CursorAura() {
   const [visible, setVisible] = useState(false)
   const [hovering, setHovering] = useState(false)
@@ -9,8 +9,8 @@ export function CursorAura() {
 
   const x = useMotionValue(-100)
   const y = useMotionValue(-100)
-  const springX = useSpring(x, { stiffness: 320, damping: 30, mass: 0.35 })
-  const springY = useSpring(y, { stiffness: 320, damping: 30, mass: 0.35 })
+  const springX = useSpring(x, { stiffness: 380, damping: 32, mass: 0.28 })
+  const springY = useSpring(y, { stiffness: 380, damping: 32, mass: 0.28 })
 
   useEffect(() => {
     try {
@@ -55,21 +55,23 @@ export function CursorAura() {
       className="pointer-events-none fixed top-0 left-0 z-[90] -translate-x-1/2 -translate-y-1/2"
       style={{ x: springX, y: springY, opacity: visible ? 1 : 0 }}
     >
-      <div
-        className={`flex items-center justify-center rounded-full border border-accent/50 bg-panel/90 text-accent shadow-[0_4px_18px_rgba(0,0,0,0.14)] backdrop-blur-sm transition-all duration-200 ${
-          hovering ? 'h-9 w-9 scale-110' : 'h-7 w-7'
-        }`}
-      >
-        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" aria-hidden>
-          <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="1.8" />
-          <path
-            d="M8 10V7.5a4 4 0 0 1 8 0V10"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          />
-          <circle cx="12" cy="15" r="1.2" fill="currentColor" />
-        </svg>
+      <div className={`relative transition-transform duration-200 ${hovering ? 'scale-125' : 'scale-100'}`}>
+        {/* Expanding radar rings */}
+        <span className="radar-ring radar-ring--a" />
+        <span className="radar-ring radar-ring--b" />
+
+        {/* Crosshair ticks */}
+        <span className="absolute left-1/2 top-0 h-1.5 w-px -translate-x-1/2 -translate-y-3 bg-accent/70" />
+        <span className="absolute bottom-0 left-1/2 h-1.5 w-px -translate-x-1/2 translate-y-3 bg-accent/70" />
+        <span className="absolute left-0 top-1/2 h-px w-1.5 -translate-x-3 -translate-y-1/2 bg-accent/70" />
+        <span className="absolute right-0 top-1/2 h-px w-1.5 -translate-y-1/2 translate-x-3 bg-accent/70" />
+
+        {/* Core blip */}
+        <span
+          className={`relative z-10 block rounded-full bg-accent shadow-[0_0_12px_color-mix(in_srgb,var(--accent)_70%,transparent)] ${
+            hovering ? 'h-2.5 w-2.5' : 'h-2 w-2'
+          }`}
+        />
       </div>
     </motion.div>
   )

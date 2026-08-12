@@ -230,4 +230,46 @@ html.dark {
       transform: translate3d(22px, 22px, 0);
     }
   }
+
+  .radar-ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    margin-top: -9px;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 25%, transparent);
+    pointer-events: none;
+  }
+
+  .radar-ring--a {
+    animation: radar-pulse 1.6s ease-out infinite;
+  }
+
+  .radar-ring--b {
+    animation: radar-pulse 1.6s ease-out infinite 0.75s;
+  }
+
+  @keyframes radar-pulse {
+    0% {
+      transform: scale(0.55);
+      opacity: 0.85;
+    }
+    100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radar-ring--a,
+    .radar-ring--b {
+      animation: none;
+      opacity: 0.35;
+      transform: scale(1.2);
+    }
+  }
 }
