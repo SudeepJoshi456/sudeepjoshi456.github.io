@@ -116,6 +116,20 @@ export function CommandPalette({
         run: () => onOpenDetail({ type: 'skills' }),
       },
       {
+        id: 'projects-all',
+        group: 'pages',
+        title: 'Projects',
+        subtitle: 'FICO fraud detection, Uplift Biz',
+        keywords: 'projects portfolio fico uplift fraud',
+        icon: (
+          <IconTile>
+            <IconLayers />
+          </IconTile>
+        ),
+        keepOpen: true,
+        run: () => onOpenDetail({ type: 'projects' }),
+      },
+      {
         id: 'resume',
         group: 'actions',
         title: 'Open resume PDF',

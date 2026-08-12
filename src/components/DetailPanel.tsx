@@ -96,6 +96,36 @@ export function DetailPanel({
     )
   }
 
+  if (view.type === 'projects') {
+    eyebrow = 'Projects'
+    title = 'Selected work'
+    icon = (
+      <IconTile>
+        <IconLayers />
+      </IconTile>
+    )
+    body = (
+      <ul className="space-y-8">
+        {projects.map((project, index) => (
+          <li
+            key={project.id}
+            className={index > 0 ? 'border-t border-line/80 pt-8' : undefined}
+          >
+            <p className="font-display text-base font-semibold text-ink">{project.title}</p>
+            <p className="mt-1 text-xs text-mute">{project.year}</p>
+            {project.highlight ? (
+              <p className="mt-3 text-sm font-medium text-accent">{project.highlight}</p>
+            ) : null}
+            <p className="mt-4 text-sm leading-relaxed text-ink-soft">{project.description}</p>
+            <div className="mt-4">
+              <StackChips items={project.stack} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
   if (view.type === 'project') {
     const project = projects.find((p) => p.id === view.id)
     if (!project) return null
