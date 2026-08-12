@@ -247,12 +247,25 @@ export function DetailPanel({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full border border-line px-2.5 py-1 text-[11px] text-mute transition hover:text-ink"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-wash px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:text-ink"
+              aria-label="Close panel"
             >
-              esc
+              <span>Close</span>
+              <kbd className="hidden rounded border border-line bg-bg px-1 py-0.5 text-[10px] text-mute sm:inline">
+                esc
+              </kbd>
             </button>
           </div>
-          <div className="overflow-y-auto px-5 py-6">{body}</div>
+          <div className="overflow-y-auto px-5 py-6 pb-8">{body}</div>
+          <div className="border-t border-line p-4 sm:hidden">
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full rounded-xl bg-ink px-4 py-3 text-sm font-medium text-bg"
+            >
+              Close
+            </button>
+          </div>
         </motion.aside>
       </motion.div>
     </AnimatePresence>

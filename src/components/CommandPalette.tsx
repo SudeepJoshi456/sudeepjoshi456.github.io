@@ -268,7 +268,7 @@ export function CommandPalette({
     <AnimatePresence>
       {open ? (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[10vh] sm:pt-[14vh]"
+          className="fixed inset-0 z-50 flex items-end justify-center sm:items-start sm:px-4 sm:pt-[10vh] md:pt-[14vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -283,14 +283,15 @@ export function CommandPalette({
             role="dialog"
             aria-modal="true"
             aria-label="Command menu"
-            initial={{ opacity: 0, y: 14, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-line/80 bg-panel shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="relative flex max-h-[88vh] w-full max-w-xl flex-col overflow-hidden rounded-t-2xl border border-line/80 bg-panel shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:max-h-none sm:rounded-2xl"
           >
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-accent/10 to-transparent" />
-
+            <div className="flex justify-center pt-2 sm:hidden" aria-hidden>
+              <span className="h-1 w-10 rounded-full bg-line" />
+            </div>
             <div className="relative flex items-center gap-3 border-b border-line px-4 py-3.5">
               <IconTile className="border-accent/30 bg-accent/10 text-accent">
                 <IconSearch />
@@ -303,10 +304,16 @@ export function CommandPalette({
                 className="w-full bg-transparent text-[0.95rem] text-ink outline-none placeholder:text-mute"
                 autoComplete="off"
                 spellCheck={false}
+                enterKeyHint="search"
               />
-              <kbd className="hidden rounded-md border border-line bg-wash px-1.5 py-0.5 text-[10px] text-mute sm:inline">
-                esc
-              </kbd>
+              <button
+                type="button"
+                onClick={() => onOpenChange(false)}
+                className="shrink-0 rounded-full border border-line bg-wash px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:text-ink"
+                aria-label="Close search"
+              >
+                Close
+              </button>
             </div>
 
             <div className="relative flex gap-2 overflow-x-auto border-b border-line px-3 py-2.5">
@@ -330,7 +337,7 @@ export function CommandPalette({
               })}
             </div>
 
-            <div ref={listRef} className="relative max-h-[min(52vh,440px)] overflow-y-auto p-2">
+            <div ref={listRef} className="relative min-h-0 flex-1 overflow-y-auto p-2 sm:max-h-[min(52vh,440px)]">
               {items.length === 0 ? (
                 <p className="px-3 py-10 text-center text-sm text-mute">No results for “{query}”</p>
               ) : (
@@ -354,7 +361,7 @@ export function CommandPalette({
                                 item.run()
                                 onOpenChange(false)
                               }}
-                              className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2.5 text-left transition ${
+                              className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-3 text-left transition sm:py-2.5 ${
                                 selected
                                   ? 'bg-accent/12 text-ink ring-1 ring-accent/25'
                                   : 'text-ink-soft hover:bg-wash/80'
@@ -368,6 +375,9 @@ export function CommandPalette({
                                     {item.subtitle}
                                   </span>
                                 ) : null}
+                              </span>
+                              <span className="text-[10px] uppercase tracking-wider text-accent sm:hidden">
+                                open
                               </span>
                               {selected ? (
                                 <span className="hidden text-[10px] uppercase tracking-wider text-accent sm:inline">
@@ -384,9 +394,17 @@ export function CommandPalette({
               )}
             </div>
 
-            <div className="relative flex items-center justify-between border-t border-line px-4 py-2.5 text-[11px] text-mute">
-              <span>↑↓ move · ↵ open · esc close</span>
-              <span>{isMac() ? '⌘/' : 'Ctrl /'}</span>
+            <div className="relative flex items-center justify-between gap-3 border-t border-line px-4 py-3 text-[11px] text-mute">
+              <span className="sm:hidden">Tap a result to open</span>
+              <span className="hidden sm:inline">↑↓ move, ↵ open, esc close</span>
+              <button
+                type="button"
+                onClick={() => onOpenChange(false)}
+                className="rounded-lg border border-line px-2.5 py-1 text-xs text-ink-soft hover:text-ink sm:hidden"
+              >
+                Close menu
+              </button>
+              <span className="hidden sm:inline">{isMac() ? '⌘/' : 'Ctrl /'}</span>
             </div>
           </motion.div>
         </motion.div>
