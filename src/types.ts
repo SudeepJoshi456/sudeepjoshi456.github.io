@@ -1,7 +1,8 @@
 export type DetailView =
-  | { type: 'experience'; id: string }
-  | { type: 'project'; id: string }
+  | { type: 'experience' }
+  | { type: 'education' }
   | { type: 'projects' }
-  | { type: 'about' }
   | { type: 'skills' }
+  | { type: 'links' }
+  | { type: 'about' }
   | null

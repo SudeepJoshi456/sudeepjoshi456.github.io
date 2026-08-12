@@ -18,13 +18,13 @@ export function getMissions(touch: boolean, shortcut: string): Mission[] {
     },
     {
       id: 2,
-      title: 'Open an Experience',
-      detail: 'In Search, open any Microsoft / Amazon role (right under Home)',
+      title: 'Open Experience',
+      detail: 'In Search, tap Experience',
     },
     {
       id: 3,
-      title: 'Open About & education',
-      detail: 'Still in Search, tap “About & education”',
+      title: 'Open Education',
+      detail: 'Still in Search, tap Education',
     },
   ]
 }

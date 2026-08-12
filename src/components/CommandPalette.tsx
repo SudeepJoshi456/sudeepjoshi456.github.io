@@ -1,18 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { experience, profile } from '../data/content'
 import type { DetailView } from '../types'
 
 export type { DetailView }
 import {
   IconBriefcase,
-  IconCode,
   IconFile,
   IconHome,
   IconLayers,
   IconLink,
-  IconMail,
-  IconMark,
   IconSearch,
   IconSpark,
   IconTile,
@@ -41,22 +37,6 @@ function isMac() {
   return typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform)
 }
 
-function companyMark(company: string) {
-  if (company === 'Microsoft') return <IconMark label="MS" tone="ms" />
-  if (company === 'Amazon') return <IconMark label="AZ" tone="amz" />
-  if (company === 'WGI') return <IconMark label="WG" tone="wgi" />
-  return <IconMark label={company.slice(0, 2).toUpperCase()} />
-}
-
-const categories = [
-  { id: 'all', label: 'All', icon: <IconSearch className="h-3.5 w-3.5" /> },
-  { id: 'navigate', label: 'Home', icon: <IconHome className="h-3.5 w-3.5" /> },
-  { id: 'experience', label: 'Experience', icon: <IconBriefcase className="h-3.5 w-3.5" /> },
-  { id: 'projects', label: 'Projects', icon: <IconLayers className="h-3.5 w-3.5" /> },
-  { id: 'pages', label: 'Pages', icon: <IconUser className="h-3.5 w-3.5" /> },
-  { id: 'actions', label: 'Links', icon: <IconLink className="h-3.5 w-3.5" /> },
-] as const
-
 export function CommandPalette({
   open,
   onOpenChange,
@@ -65,7 +45,6 @@ export function CommandPalette({
 }: CommandPaletteProps) {
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
-  const [category, setCategory] = useState<(typeof categories)[number]['id']>('all')
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
@@ -73,7 +52,7 @@ export function CommandPalette({
     const list: CommandItem[] = [
       {
         id: 'home',
-        group: 'navigate',
+        group: 'vault',
         title: 'Home',
         subtitle: 'back to the vault overview',
         keywords: 'home top start overview',
@@ -87,50 +66,40 @@ export function CommandPalette({
           window.scrollTo({ top: 0, behavior: 'smooth' })
         },
       },
-      ...experience.map((job) => ({
-        id: `exp-${job.id}`,
-        group: 'experience',
-        title: `${job.role} at ${job.company}`,
-        subtitle: `${job.metric}, ${job.dates}`,
-        keywords: `${job.company} ${job.role} ${job.metric} ${job.stack.join(' ')} ${job.summary}`,
-        icon: companyMark(job.company),
-        keepOpen: true,
-        run: () => onOpenDetail({ type: 'experience', id: job.id }),
-      })),
       {
-        id: 'about',
-        group: 'pages',
-        title: 'About & education',
-        subtitle: 'background, schools, seeking new grad roles',
-        keywords: 'about education school alabama jacksonville gpa new grad',
+        id: 'experience',
+        group: 'vault',
+        title: 'Experience',
+        subtitle: 'Microsoft, Amazon, WGI',
+        keywords: 'experience microsoft amazon wgi intern work',
+        icon: (
+          <IconTile>
+            <IconBriefcase />
+          </IconTile>
+        ),
+        keepOpen: true,
+        run: () => onOpenDetail({ type: 'experience' }),
+      },
+      {
+        id: 'education',
+        group: 'vault',
+        title: 'Education',
+        subtitle: 'AAMU, JSU, about, leadership',
+        keywords: 'education school alabama jacksonville aamu about',
         icon: (
           <IconTile>
             <IconUser />
           </IconTile>
         ),
         keepOpen: true,
-        run: () => onOpenDetail({ type: 'about' }),
+        run: () => onOpenDetail({ type: 'education' }),
       },
       {
-        id: 'skills',
-        group: 'pages',
-        title: 'Skills & recognition',
-        subtitle: 'languages, cloud, awards',
-        keywords: 'skills stack python typescript aws recognition meta bloomberg',
-        icon: (
-          <IconTile>
-            <IconSpark />
-          </IconTile>
-        ),
-        keepOpen: true,
-        run: () => onOpenDetail({ type: 'skills' }),
-      },
-      {
-        id: 'projects-all',
-        group: 'projects',
+        id: 'projects',
+        group: 'vault',
         title: 'Projects',
-        subtitle: 'FICO fraud detection, Uplift Biz',
-        keywords: 'projects portfolio fico uplift fraud',
+        subtitle: 'FICO, Uplift Biz',
+        keywords: 'projects fico uplift portfolio',
         icon: (
           <IconTile>
             <IconLayers />
@@ -140,8 +109,36 @@ export function CommandPalette({
         run: () => onOpenDetail({ type: 'projects' }),
       },
       {
+        id: 'skills',
+        group: 'vault',
+        title: 'Skills & recognition',
+        subtitle: 'languages, cloud, awards',
+        keywords: 'skills recognition awards stack python typescript',
+        icon: (
+          <IconTile>
+            <IconSpark />
+          </IconTile>
+        ),
+        keepOpen: true,
+        run: () => onOpenDetail({ type: 'skills' }),
+      },
+      {
+        id: 'links',
+        group: 'vault',
+        title: 'Links',
+        subtitle: 'LinkedIn, GitHub, email, resume',
+        keywords: 'links linkedin github email resume contact',
+        icon: (
+          <IconTile>
+            <IconLink />
+          </IconTile>
+        ),
+        keepOpen: true,
+        run: () => onOpenDetail({ type: 'links' }),
+      },
+      {
         id: 'resume',
-        group: 'actions',
+        group: 'vault',
         title: 'Open resume PDF',
         subtitle: 'download / view',
         keywords: 'resume cv pdf download',
@@ -150,70 +147,24 @@ export function CommandPalette({
             <IconFile />
           </IconTile>
         ),
-        run: () => window.open(profile.links.resume, '_blank', 'noopener,noreferrer'),
-      },
-      {
-        id: 'email',
-        group: 'actions',
-        title: 'Email Sudeep',
-        subtitle: profile.email,
-        keywords: 'email contact mail joshisudeep',
-        icon: (
-          <IconTile>
-            <IconMail />
-          </IconTile>
-        ),
-        run: () => {
-          window.location.href = `mailto:${profile.email}`
-        },
-      },
-      {
-        id: 'linkedin',
-        group: 'actions',
-        title: 'Open LinkedIn',
-        subtitle: 'profile',
-        keywords: 'linkedin social',
-        icon: (
-          <IconTile>
-            <IconLink />
-          </IconTile>
-        ),
-        run: () => window.open(profile.links.linkedin, '_blank', 'noopener,noreferrer'),
-      },
-      {
-        id: 'github',
-        group: 'actions',
-        title: 'Open GitHub',
-        subtitle: 'code & repos',
-        keywords: 'github code repos',
-        icon: (
-          <IconTile>
-            <IconCode />
-          </IconTile>
-        ),
-        run: () => window.open(profile.links.github, '_blank', 'noopener,noreferrer'),
+        run: () => window.open('/Sudeep_Joshi_Resume.pdf', '_blank', 'noopener,noreferrer'),
       },
     ]
 
     const q = query.trim().toLowerCase()
-    return list.filter((item) => {
-      const inCategory = category === 'all' || item.group === category
-      if (!inCategory) return false
-      if (!q) return true
-      return (
+    if (!q) return list
+    return list.filter(
+      (item) =>
         item.title.toLowerCase().includes(q) ||
         item.subtitle?.toLowerCase().includes(q) ||
-        item.keywords.toLowerCase().includes(q) ||
-        item.group.toLowerCase().includes(q)
-      )
-    })
-  }, [category, onGoHome, onOpenDetail, query])
+        item.keywords.toLowerCase().includes(q),
+    )
+  }, [onGoHome, onOpenDetail, query])
 
   useEffect(() => {
     if (!open) {
       setQuery('')
       setActive(0)
-      setCategory('all')
       return
     }
     const id = window.setTimeout(() => inputRef.current?.focus(), 10)
@@ -222,7 +173,7 @@ export function CommandPalette({
 
   useEffect(() => {
     setActive(0)
-  }, [query, category])
+  }, [query])
 
   useEffect(() => {
     const el = listRef.current?.querySelector<HTMLElement>(`[data-index="${active}"]`)
@@ -246,9 +197,10 @@ export function CommandPalette({
         e.preventDefault()
         setActive((i) => Math.max(i - 1, 0))
       }
-      if (e.key === 'Enter' && items[active]) {
+      if (e.key === 'Enter') {
         e.preventDefault()
         const item = items[active]
+        if (!item) return
         item.run()
         if (!item.keepOpen) onOpenChange(false)
       }
@@ -257,18 +209,6 @@ export function CommandPalette({
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [active, items, onOpenChange, open])
-
-  const grouped = useMemo(() => {
-    const map = new Map<string, CommandItem[]>()
-    for (const item of items) {
-      const arr = map.get(item.group) ?? []
-      arr.push(item)
-      map.set(item.group, arr)
-    }
-    return [...map.entries()]
-  }, [items])
-
-  let flatIndex = -1
 
   return (
     <AnimatePresence>
@@ -309,7 +249,7 @@ export function CommandPalette({
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search the vault..."
+                placeholder="Search sections..."
                 className="w-full bg-transparent text-[0.95rem] text-ink outline-none placeholder:text-mute"
                 autoComplete="off"
                 spellCheck={false}
@@ -325,93 +265,50 @@ export function CommandPalette({
               </button>
             </div>
 
-            <div className="relative flex gap-2 overflow-x-auto border-b border-line px-3 py-2.5">
-              {categories.map((cat) => {
-                const selected = category === cat.id
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setCategory(cat.id)}
-                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition ${
-                      selected
-                        ? 'border-accent/40 bg-accent/15 text-accent'
-                        : 'border-line bg-wash/60 text-mute hover:text-ink'
-                    }`}
-                  >
-                    {cat.icon}
-                    {cat.label}
-                  </button>
-                )
-              })}
-            </div>
-
             <div ref={listRef} className="relative min-h-0 flex-1 overflow-y-auto p-2 sm:max-h-[min(52vh,440px)]">
               {items.length === 0 ? (
                 <p className="px-3 py-10 text-center text-sm text-mute">No results for “{query}”</p>
               ) : (
-                grouped.map(([group, groupItems]) => (
-                  <div key={group} className="mb-2">
-                    <p className="vault-label vault-label--quiet px-3 py-1.5">{group}</p>
-                    <ul>
-                      {groupItems.map((item) => {
-                        flatIndex += 1
-                        const index = flatIndex
-                        const selected = index === active
-                        return (
-                          <li key={item.id}>
-                            <button
-                              type="button"
-                              data-index={index}
-                              onMouseEnter={() => setActive(index)}
-                              onClick={() => {
-                                item.run()
-                                if (!item.keepOpen) onOpenChange(false)
-                              }}
-                              className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-3 text-left transition sm:py-2.5 ${
-                                selected
-                                  ? 'bg-accent/12 text-ink ring-1 ring-accent/25'
-                                  : 'text-ink-soft hover:bg-wash/80'
-                              }`}
-                            >
-                              {item.icon}
-                                <span className="min-w-0 flex-1">
-                                <span className="block font-display text-sm font-medium">{item.title}</span>
-                                {item.subtitle ? (
-                                  <span className="mt-0.5 block truncate text-xs text-mute">
-                                    {item.subtitle}
-                                  </span>
-                                ) : null}
-                              </span>
-                              <span className="text-[10px] uppercase tracking-wider text-accent sm:hidden">
-                                open
-                              </span>
-                              {selected ? (
-                                <span className="hidden text-[10px] uppercase tracking-wider text-accent sm:inline">
-                                  enter
-                                </span>
-                              ) : null}
-                            </button>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </div>
-                ))
+                <ul>
+                  {items.map((item, index) => {
+                    const selected = index === active
+                    return (
+                      <li key={item.id}>
+                        <button
+                          type="button"
+                          data-index={index}
+                          onMouseEnter={() => setActive(index)}
+                          onClick={() => {
+                            item.run()
+                            if (!item.keepOpen) onOpenChange(false)
+                          }}
+                          className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-3 text-left transition sm:py-2.5 ${
+                            selected
+                              ? 'bg-accent/12 text-ink ring-1 ring-accent/25'
+                              : 'text-ink-soft hover:bg-wash/80'
+                          }`}
+                        >
+                          {item.icon}
+                          <span className="min-w-0 flex-1">
+                            <span className="block font-display text-sm font-medium">{item.title}</span>
+                            {item.subtitle ? (
+                              <span className="mt-0.5 block text-xs text-mute">{item.subtitle}</span>
+                            ) : null}
+                          </span>
+                          <span className="text-[10px] uppercase tracking-wider text-accent sm:hidden">
+                            open
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
               )}
             </div>
 
             <div className="relative flex items-center justify-between gap-3 border-t border-line px-4 py-3 text-xs text-mute">
-              <span className="sm:hidden">Tap a result to open</span>
-              <span className="hidden sm:inline">↑↓ move, ↵ open, esc close</span>
-              <button
-                type="button"
-                onClick={() => onOpenChange(false)}
-                className="rounded-lg border border-line px-2.5 py-1 text-xs text-ink-soft hover:text-ink sm:hidden"
-              >
-                Close menu
-              </button>
-              <span className="hidden sm:inline">{isMac() ? '⌘/' : 'Ctrl /'}</span>
+              <span>Sections open in the side panel</span>
+              <span className="hidden sm:inline">{isMac() ? '⌘/' : 'Ctrl+/'}</span>
             </div>
           </motion.div>
         </motion.div>
@@ -420,15 +317,15 @@ export function CommandPalette({
   )
 }
 
-export function useCommandMenu(onToggle: () => void) {
+export function useCommandMenu(toggle: () => void) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && (e.key === '/' || e.code === 'Slash')) {
+      if ((e.metaKey || e.ctrlKey) && e.key === '/') {
         e.preventDefault()
-        onToggle()
+        toggle()
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onToggle])
+  }, [toggle])
 }

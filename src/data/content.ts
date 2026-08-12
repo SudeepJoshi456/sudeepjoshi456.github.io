@@ -11,6 +11,16 @@ export const profile = {
   },
 }
 
+/** Compact homepage lines with optional brand logos. */
+export const highlightLines: { text: string; logo?: 'microsoft' | 'amazon' | 'nsf' | 'aamu' | 'wgi' }[] = [
+  { text: 'SWE Intern @ Microsoft', logo: 'microsoft' },
+  { text: 'SDE Intern @ Amazon ×2', logo: 'amazon' },
+  { text: 'Research @ NSF', logo: 'nsf' },
+  { text: 'Research @ AAMU', logo: 'aamu' },
+  { text: 'Geospatial SWE Intern @ WGI', logo: 'wgi' },
+]
+
+
 export type ExperienceItem = {
   id: string
   company: string

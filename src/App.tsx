@@ -6,12 +6,12 @@ import {
   type DetailView,
 } from './components/CommandPalette'
 import { CommandQuest, QuestTracker, SealedVaultCard, SearchPulse, VaultCompleteNotice } from './components/CommandQuest'
+import { BrandLogo } from './components/BrandLogo'
 import { CursorAura } from './components/CursorAura'
 import { DetailPanel } from './components/DetailPanel'
 import { FadeIn } from './components/FadeIn'
-import { IconMark } from './components/Icons'
 import { VaultEntrance } from './components/VaultEntrance'
-import { experience, leadership, profile } from './data/content'
+import { highlightLines, profile } from './data/content'
 import { useIsTouch, useShortcutLabel } from './hooks/useDevice'
 import { useTheme } from './hooks/useTheme'
 
@@ -34,22 +34,6 @@ function SectionRail({
   )
 }
 
-function companyTone(company: string): 'ms' | 'amz' | 'wgi' | 'default' {
-  if (company === 'Microsoft') return 'ms'
-  if (company === 'Amazon') return 'amz'
-  if (company === 'WGI') return 'wgi'
-  return 'default'
-}
-
-const bigTech = experience.filter((job) => job.company === 'Microsoft' || job.company === 'Amazon')
-const otherExp = experience.filter((job) => job.company !== 'Microsoft' && job.company !== 'Amazon')
-
-const highlights = [
-  '3 Big Tech internships (Microsoft, Amazon ×2)',
-  'Shipped Copilot AI and Slack/AWS features used by managers in production',
-  'CS @ Alabama A&M, 4.0 GPA, looking for new grad roles',
-]
-
 const QUEST_TOTAL = 3
 
 export default function App() {
@@ -67,7 +51,6 @@ export default function App() {
   const shortcut = useShortcutLabel()
   const unlocked = questProgress >= QUEST_TOTAL
 
-  /** Only advance one step at a time, in order. Resets on refresh. */
   const completeMission = useCallback((mission: 1 | 2 | 3) => {
     setQuestProgress((prev) => {
       if (mission !== prev + 1) return prev
@@ -99,7 +82,7 @@ export default function App() {
     (view: Exclude<DetailView, null>) => {
       setDetail(view)
       if (view.type === 'experience') completeMission(2)
-      if (view.type === 'about') completeMission(3)
+      if (view.type === 'education' || view.type === 'about') completeMission(3)
     },
     [completeMission],
   )
@@ -179,21 +162,9 @@ export default function App() {
             </FadeIn>
           ) : null}
 
-          <FadeIn delay={0.06} className="mt-12">
-            <SectionRail label="highlights" />
-            <ul className="space-y-3 text-sm leading-relaxed text-ink-soft">
-              {highlights.map((line) => (
-                <li key={line} className="grid grid-cols-[1rem_1fr] gap-2.5">
-                  <Arrow />
-                  <span>{line}</span>
-                </li>
-              ))}
-            </ul>
-          </FadeIn>
-
-          <FadeIn delay={0.08} className="mt-12">
+          <FadeIn delay={0.06} className="mt-10">
             <SectionRail
-              label="experience"
+              label="highlights"
               action={
                 <button
                   type="button"
@@ -204,31 +175,26 @@ export default function App() {
                 </button>
               }
             />
-
-            <ul className="divide-y divide-line/80 border-y border-line/80">
-              {bigTech.map((job) => (
-                <li key={job.id}>
+            <ul className="space-y-2.5 text-sm text-ink-soft">
+              {highlightLines.map((line) => (
+                <li key={line.text}>
                   <button
                     type="button"
-                    onClick={() => openDetail({ type: 'experience', id: job.id })}
-                    className="group flex w-full items-start gap-3 py-4 text-left transition-colors hover:bg-wash/50"
+                    onClick={() =>
+                      openDetail(
+                        line.logo === 'aamu' || line.logo === 'nsf'
+                          ? { type: 'education' }
+                          : { type: 'experience' },
+                      )
+                    }
+                    className="grid w-full grid-cols-[1.5rem_1fr] items-center gap-2.5 text-left transition hover:text-ink"
                   >
-                    <IconMark
-                      label={job.company === 'Microsoft' ? 'MS' : 'AZ'}
-                      tone={companyTone(job.company)}
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                        <span className="text-sm font-medium text-ink group-hover:text-accent">
-                          {job.company}
-                        </span>
-                        <span className="text-xs text-mute">{job.role}</span>
-                      </span>
-                      <span className="mt-1 block text-xs text-ink-soft">{job.metric}</span>
-                    </span>
-                    <span className="mt-1 text-xs text-mute opacity-0 transition group-hover:opacity-100">
-                      →
-                    </span>
+                    {line.logo ? (
+                      <BrandLogo id={line.logo} label={line.text} className="h-6 w-6" />
+                    ) : (
+                      <Arrow />
+                    )}
+                    <span className="text-ink">{line.text}</span>
                   </button>
                 </li>
               ))}
@@ -236,56 +202,20 @@ export default function App() {
           </FadeIn>
 
           <FadeIn delay={0.1} className="mt-12">
-            <SectionRail label="more" />
-            <ul className="space-y-3 text-sm text-ink-soft">
-              {otherExp.map((job) => (
-                <li key={job.id}>
-                  <button
-                    type="button"
-                    onClick={() => openDetail({ type: 'experience', id: job.id })}
-                    className="grid w-full grid-cols-[1rem_1fr] gap-2.5 text-left transition hover:text-ink"
-                  >
-                    <Arrow />
-                    <span>
-                      <span className="text-ink">{job.company}</span>
-                      <span className="text-mute">, {job.metric}</span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </FadeIn>
-
-          <FadeIn delay={0.11} className="mt-12">
-            <SectionRail label="leadership" />
-            <ul className="space-y-2.5 text-sm text-ink-soft">
-              {leadership.slice(0, 3).map((item) => (
-                <li key={item} className="grid grid-cols-[1rem_1fr] gap-2.5">
-                  <Arrow />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <button
-              type="button"
-              onClick={() => openDetail({ type: 'about' })}
-              className="mt-3 text-xs font-medium text-accent transition hover:underline hover:underline-offset-4"
-            >
-              View all
-            </button>
-          </FadeIn>
-
-          <FadeIn delay={0.12} className="mt-12">
             <nav className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-soft">
               <button
                 type="button"
-                onClick={() => openDetail({ type: 'about' })}
+                onClick={() => openDetail({ type: 'experience' })}
                 className="transition hover:text-accent"
               >
-                About
-              </button>
-              <button type="button" onClick={openPalette} className="transition hover:text-accent">
                 Experience
+              </button>
+              <button
+                type="button"
+                onClick={() => openDetail({ type: 'education' })}
+                className="transition hover:text-accent"
+              >
+                Education
               </button>
               <button
                 type="button"
@@ -304,7 +234,7 @@ export default function App() {
             </nav>
           </FadeIn>
 
-          <FadeIn delay={0.14} className="mt-8 border-t border-line/80 pt-6">
+          <FadeIn delay={0.12} className="mt-8 border-t border-line/80 pt-6">
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-mute">
               <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="hover:text-accent">
                 LinkedIn
