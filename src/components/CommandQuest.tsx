@@ -185,20 +185,76 @@ const endings = [
     title: 'Recruit for a team',
     detail: "You're hiring for new grads. Open a transmission.",
     mailSubject: 'Vault recruit: new grad role',
+    message: `Hi Sudeep,
+
+I came across your portfolio vault and I'm hiring for a new grad software engineering role. Would love to connect about the opportunity.
+
+Best`,
   },
   {
     id: 'collaborate' as const,
     title: 'Interested to collaborate',
     detail: "Project, research, hackathon, or side build. Let's talk.",
     mailSubject: 'Vault collab: interested to work together',
+    message: `Hi Sudeep,
+
+I explored your portfolio vault and I'm interested in collaborating. Would love to share more about the project and see if it's a fit.
+
+Best`,
   },
   {
     id: 'briefing' as const,
     title: 'Send a briefing',
     detail: 'Not hiring or collaborating yet. Still want to connect.',
     mailSubject: 'Saw your vault: quick chat?',
+    message: `Hi Sudeep,
+
+I went through your portfolio vault and wanted to reach out. Would be great to connect.
+
+Best`,
   },
 ]
+
+function CopyMessage({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    } catch {
+      // Fallback for older browsers / blocked clipboard
+      const area = document.createElement('textarea')
+      area.value = text
+      area.setAttribute('readonly', '')
+      area.style.position = 'fixed'
+      area.style.left = '-9999px'
+      document.body.appendChild(area)
+      area.select()
+      document.execCommand('copy')
+      document.body.removeChild(area)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    }
+  }
+
+  return (
+    <div className="mt-3 rounded-xl border border-line bg-bg p-3">
+      <div className="flex items-center justify-between gap-2">
+        <p className="vault-label">Suggested message</p>
+        <button
+          type="button"
+          onClick={() => void copy()}
+          className="rounded-lg border border-line bg-wash px-2.5 py-1 text-xs font-medium text-ink transition hover:border-accent/40 hover:text-accent"
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <p className="mt-2 whitespace-pre-wrap text-xs leading-relaxed text-ink-soft">{text}</p>
+    </div>
+  )
+}
 
 export function CommandQuest({
   celebrate,
@@ -349,9 +405,13 @@ export function CommandQuest({
                       >
                         <div className="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-3">
                           <p className="vault-label vault-label--accent">Reach out via</p>
+                          <CopyMessage text={selected.message} />
+                          <p className="mt-3 text-xs text-mute">
+                            Copy the note, then open Gmail or LinkedIn and paste it.
+                          </p>
                           <div className="mt-2 grid grid-cols-2 gap-2">
                             <a
-                              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(profile.email)}&su=${encodeURIComponent(selected.mailSubject)}`}
+                              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(profile.email)}&su=${encodeURIComponent(selected.mailSubject)}&body=${encodeURIComponent(selected.message)}`}
                               target="_blank"
                               rel="noreferrer"
                               className="rounded-xl bg-ink px-3 py-2.5 text-center text-sm font-medium text-bg transition hover:bg-accent"
