@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'IBM Plex Sans', ui-sans-serif, sans-serif;
   --font-body: 'IBM Plex Mono', ui-monospace, monospace;
 
   --color-bg: var(--bg);
