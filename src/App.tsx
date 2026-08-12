@@ -11,7 +11,7 @@ import { DetailPanel } from './components/DetailPanel'
 import { FadeIn } from './components/FadeIn'
 import { IconMark } from './components/Icons'
 import { VaultEntrance } from './components/VaultEntrance'
-import { experience, leadership, profile, projects } from './data/content'
+import { experience, leadership, profile } from './data/content'
 import { useIsTouch, useShortcutLabel } from './hooks/useDevice'
 import { useTheme } from './hooks/useTheme'
 
@@ -105,8 +105,8 @@ export default function App() {
   const openDetail = useCallback(
     (view: Exclude<DetailView, null>) => {
       setDetail(view)
-      if (view.type === 'about') completeMission(2)
-      if (view.type === 'experience') completeMission(3)
+      if (view.type === 'experience') completeMission(2)
+      if (view.type === 'about') completeMission(3)
     },
     [completeMission],
   )
@@ -251,23 +251,6 @@ export default function App() {
                     <span>
                       <span className="text-ink">{job.company}</span>
                       <span className="text-mute">, {job.metric}</span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-              {projects.map((project) => (
-                <li key={project.id}>
-                  <button
-                    type="button"
-                    onClick={() => openDetail({ type: 'project', id: project.id })}
-                    className="grid w-full grid-cols-[1rem_1fr] gap-2.5 text-left transition hover:text-ink"
-                  >
-                    <Arrow />
-                    <span>
-                      <span className="text-ink">{project.title}</span>
-                      {project.highlight ? (
-                        <span className="text-mute">, {project.highlight}</span>
-                      ) : null}
                     </span>
                   </button>
                 </li>

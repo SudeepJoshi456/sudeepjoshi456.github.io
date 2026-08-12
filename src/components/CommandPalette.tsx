@@ -87,6 +87,16 @@ export function CommandPalette({
           window.scrollTo({ top: 0, behavior: 'smooth' })
         },
       },
+      ...experience.map((job) => ({
+        id: `exp-${job.id}`,
+        group: 'experience',
+        title: `${job.role} at ${job.company}`,
+        subtitle: `${job.metric}, ${job.dates}`,
+        keywords: `${job.company} ${job.role} ${job.metric} ${job.stack.join(' ')} ${job.summary}`,
+        icon: companyMark(job.company),
+        keepOpen: true,
+        run: () => onOpenDetail({ type: 'experience', id: job.id }),
+      })),
       {
         id: 'about',
         group: 'pages',
@@ -183,16 +193,6 @@ export function CommandPalette({
         ),
         run: () => window.open(profile.links.github, '_blank', 'noopener,noreferrer'),
       },
-      ...experience.map((job) => ({
-        id: `exp-${job.id}`,
-        group: 'experience',
-        title: `${job.role} at ${job.company}`,
-        subtitle: `${job.metric}, ${job.dates}`,
-        keywords: `${job.company} ${job.role} ${job.metric} ${job.stack.join(' ')} ${job.summary}`,
-        icon: companyMark(job.company),
-        keepOpen: true,
-        run: () => onOpenDetail({ type: 'experience', id: job.id }),
-      })),
       ...projects.map((project) => ({
         id: `proj-${project.id}`,
         group: 'projects',
