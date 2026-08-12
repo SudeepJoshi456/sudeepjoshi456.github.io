@@ -187,9 +187,15 @@ const endings = [
     mailSubject: 'Vault recruit: new grad role',
   },
   {
+    id: 'collaborate' as const,
+    title: 'Interested to collaborate',
+    detail: 'Project, research, hackathon, or side build. Lets talk.',
+    mailSubject: 'Vault collab: interested to work together',
+  },
+  {
     id: 'briefing' as const,
     title: 'Send a briefing',
-    detail: 'Not hiring yet. Still want to connect.',
+    detail: 'Not hiring or collaborating yet. Still want to connect.',
     mailSubject: 'Saw your vault: quick chat?',
   },
 ]
@@ -201,7 +207,7 @@ export function CommandQuest({
   celebrate: boolean
   onDismissCelebrate: () => void
 }) {
-  const [intent, setIntent] = useState<'recruit' | 'briefing' | null>(null)
+  const [intent, setIntent] = useState<'recruit' | 'collaborate' | 'briefing' | null>(null)
   const [phase, setPhase] = useState<'opening' | 'open'>('opening')
   const selected = endings.find((e) => e.id === intent)
 
@@ -298,7 +304,8 @@ export function CommandQuest({
                     Operator clearance unlocked.
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                    You finished the vault tour. How do you want to proceed?
+                    You finished the vault tour. Hiring, collaborating, or just saying hi. How do you want to
+                    proceed?
                   </p>
 
                   <div className="mt-5 space-y-2">
