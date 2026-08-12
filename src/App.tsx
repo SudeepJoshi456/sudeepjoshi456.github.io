@@ -5,7 +5,7 @@ import {
   useCommandMenu,
   type DetailView,
 } from './components/CommandPalette'
-import { CommandQuest, QuestTracker, SealedVaultCard, SearchPulse } from './components/CommandQuest'
+import { CommandQuest, QuestTracker, SealedVaultCard, SearchPulse, VaultCompleteNotice } from './components/CommandQuest'
 import { CursorAura } from './components/CursorAura'
 import { DetailPanel } from './components/DetailPanel'
 import { FadeIn } from './components/FadeIn'
@@ -61,6 +61,7 @@ export default function App() {
   const [detail, setDetail] = useState<DetailView>(null)
   const [showCelebrate, setShowCelebrate] = useState(false)
   const [questProgress, setQuestProgress] = useState(0)
+  const [noticeDismissed, setNoticeDismissed] = useState(false)
   const { theme, toggle } = useTheme()
   const touch = useIsTouch()
   const shortcut = useShortcutLabel()
@@ -70,15 +71,7 @@ export default function App() {
   const completeMission = useCallback((mission: 1 | 2 | 3) => {
     setQuestProgress((prev) => {
       if (mission !== prev + 1) return prev
-      const next = prev + 1
-      if (next >= QUEST_TOTAL) {
-        // Close Search/detail so the sealed-vault invite can appear on the homepage.
-        queueMicrotask(() => {
-          setPaletteOpen(false)
-          setDetail(null)
-        })
-      }
-      return next
+      return prev + 1
     })
   }, [])
 
@@ -110,6 +103,11 @@ export default function App() {
     },
     [completeMission],
   )
+
+  const openVault = () => {
+    setNoticeDismissed(true)
+    setShowCelebrate(true)
+  }
 
   const dismissCelebrate = () => {
     setShowCelebrate(false)
@@ -177,7 +175,7 @@ export default function App() {
 
           {unlocked ? (
             <FadeIn delay={0.04} className="mt-8">
-              <SealedVaultCard onOpen={() => setShowCelebrate(true)} />
+              <SealedVaultCard onOpen={openVault} />
             </FadeIn>
           ) : null}
 
@@ -329,6 +327,12 @@ export default function App() {
         progress={questProgress}
         total={QUEST_TOTAL}
         visible={vaultDone && !unlocked && !showCelebrate}
+      />
+
+      <VaultCompleteNotice
+        visible={vaultDone && unlocked && !showCelebrate && !noticeDismissed}
+        onOpen={openVault}
+        onDismiss={() => setNoticeDismissed(true)}
       />
 
       <CommandQuest celebrate={showCelebrate} onDismissCelebrate={dismissCelebrate} />

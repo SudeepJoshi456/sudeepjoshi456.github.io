@@ -98,6 +98,53 @@ export function QuestTracker({
   )
 }
 
+/** Bottom notice after quest complete. Does not interrupt browsing. */
+export function VaultCompleteNotice({
+  visible,
+  onOpen,
+  onDismiss,
+}: {
+  visible: boolean
+  onOpen: () => void
+  onDismiss: () => void
+}) {
+  if (!visible) return null
+
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[75] flex justify-center px-3 pb-3">
+      <div className="pointer-events-auto w-full max-w-lg rounded-xl border border-accent/40 bg-panel/95 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.2)] backdrop-blur-md">
+        <div className="flex items-start gap-3">
+          <span aria-hidden className="mt-0.5 text-xl">
+            🔐
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="vault-label vault-label--accent">Clearance complete</p>
+            <p className="mt-1 text-sm leading-snug text-ink">
+              Quest finished. Keep exploring, or open the vault when you are ready.
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={onOpen}
+                className="rounded-lg bg-ink px-3 py-2 text-xs font-medium text-bg transition hover:bg-accent"
+              >
+                Open vault
+              </button>
+              <button
+                type="button"
+                onClick={onDismiss}
+                className="rounded-lg px-3 py-2 text-xs font-medium text-mute transition hover:text-ink"
+              >
+                Keep exploring
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /** Homepage invite: sealed vault, only opens when the visitor chooses. */
 export function SealedVaultCard({ onOpen }: { onOpen: () => void }) {
   return (
