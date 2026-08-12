@@ -189,7 +189,7 @@ const endings = [
   {
     id: 'collaborate' as const,
     title: 'Interested to collaborate',
-    detail: 'Project, research, hackathon, or side build. Lets talk.',
+    detail: "Project, research, hackathon, or side build. Let's talk.",
     mailSubject: 'Vault collab: interested to work together',
   },
   {
