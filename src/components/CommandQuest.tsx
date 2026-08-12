@@ -182,36 +182,17 @@ export function SealedVaultCard({ onOpen }: { onOpen: () => void }) {
 const endings = [
   {
     id: 'recruit' as const,
-    title: 'Recruit for a team',
-    detail: "You're hiring for new grads. Open a transmission.",
+    title: 'Recruiter',
+    detail: "You're hiring. Drop a quick note.",
     mailSubject: 'Vault recruit: new grad role',
-    message: `Hi Sudeep,
-
-I came across your portfolio vault and I'm hiring for a new grad software engineering role. Would love to connect about the opportunity.
-
-Best`,
+    message: `hey sudeep, lemme interview you for this job:`,
   },
   {
     id: 'collaborate' as const,
-    title: 'Interested to collaborate',
-    detail: "Project, research, hackathon, or side build. Let's talk.",
-    mailSubject: 'Vault collab: interested to work together',
-    message: `Hi Sudeep,
-
-I explored your portfolio vault and I'm interested in collaborating. Would love to share more about the project and see if it's a fit.
-
-Best`,
-  },
-  {
-    id: 'briefing' as const,
-    title: 'Send a briefing',
-    detail: 'Not hiring or collaborating yet. Still want to connect.',
-    mailSubject: 'Saw your vault: quick chat?',
-    message: `Hi Sudeep,
-
-I went through your portfolio vault and wanted to reach out. Would be great to connect.
-
-Best`,
+    title: 'Collaborator',
+    detail: "Project, hackathon, research, or side build.",
+    mailSubject: "Vault collab: let's cook",
+    message: `yo sudeep, let's cook on this project:`,
   },
 ]
 
@@ -263,7 +244,7 @@ export function CommandQuest({
   celebrate: boolean
   onDismissCelebrate: () => void
 }) {
-  const [intent, setIntent] = useState<'recruit' | 'collaborate' | 'briefing' | null>(null)
+  const [intent, setIntent] = useState<'recruit' | 'collaborate' | null>(null)
   const [phase, setPhase] = useState<'opening' | 'open'>('opening')
   const selected = endings.find((e) => e.id === intent)
 
@@ -360,8 +341,7 @@ export function CommandQuest({
                     Operator clearance unlocked.
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                    You finished the vault tour. Hiring, collaborating, or just saying hi. How do you want to
-                    proceed?
+                    You finished the vault tour. Recruiter or collaborator. How do you want to proceed?
                   </p>
 
                   <div className="mt-5 space-y-2">
