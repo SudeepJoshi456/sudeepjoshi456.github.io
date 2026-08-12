@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { experience, profile, projects } from '../data/content'
+import { experience, profile } from '../data/content'
 import type { DetailView } from '../types'
 
 export type { DetailView }
@@ -127,7 +127,7 @@ export function CommandPalette({
       },
       {
         id: 'projects-all',
-        group: 'pages',
+        group: 'projects',
         title: 'Projects',
         subtitle: 'FICO fraud detection, Uplift Biz',
         keywords: 'projects portfolio fico uplift fraud',
@@ -193,20 +193,6 @@ export function CommandPalette({
         ),
         run: () => window.open(profile.links.github, '_blank', 'noopener,noreferrer'),
       },
-      ...projects.map((project) => ({
-        id: `proj-${project.id}`,
-        group: 'projects',
-        title: project.title,
-        subtitle: project.highlight ?? project.year,
-        keywords: `${project.title} ${project.stack.join(' ')} ${project.description}`,
-        icon: (
-          <IconTile>
-            <IconLayers />
-          </IconTile>
-        ),
-        keepOpen: true,
-        run: () => onOpenDetail({ type: 'project', id: project.id }),
-      })),
     ]
 
     const q = query.trim().toLowerCase()

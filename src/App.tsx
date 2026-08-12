@@ -291,6 +291,13 @@ export default function App() {
               </button>
               <button
                 type="button"
+                onClick={() => openDetail({ type: 'projects' })}
+                className="transition hover:text-accent"
+              >
+                Projects
+              </button>
+              <button
+                type="button"
                 onClick={() => openDetail({ type: 'skills' })}
                 className="transition hover:text-accent"
               >
