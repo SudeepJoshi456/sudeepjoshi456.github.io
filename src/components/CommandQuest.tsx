@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { profile } from '../data/content'
 import { useIsTouch, useShortcutLabel } from '../hooks/useDevice'
 
@@ -95,6 +96,21 @@ export function QuestTracker({
   )
 }
 
+const endings = [
+  {
+    id: 'recruit' as const,
+    title: 'Recruit for a team',
+    detail: "You're hiring — open a transmission.",
+    mailSubject: 'Vault recruit — opportunity',
+  },
+  {
+    id: 'briefing' as const,
+    title: 'Send a briefing',
+    detail: 'Not hiring yet — still want to connect.',
+    mailSubject: 'Saw your vault — quick chat?',
+  },
+]
+
 export function CommandQuest({
   celebrate,
   onDismissCelebrate,
@@ -102,9 +118,12 @@ export function CommandQuest({
   celebrate: boolean
   onDismissCelebrate: () => void
 }) {
-  const touch = useIsTouch()
-  const shortcut = useShortcutLabel()
-  const missions = getMissions(touch, shortcut)
+  const [intent, setIntent] = useState<'recruit' | 'briefing' | null>(null)
+  const selected = endings.find((e) => e.id === intent)
+
+  useEffect(() => {
+    if (!celebrate) setIntent(null)
+  }, [celebrate])
 
   return (
     <AnimatePresence>
@@ -116,7 +135,10 @@ export function CommandQuest({
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[80] flex items-end justify-center bg-[#020617]/45 px-4 pb-6 backdrop-blur-sm sm:items-center sm:pb-0"
           onMouseDown={(e) => {
-            if (e.target === e.currentTarget) onDismissCelebrate()
+            if (e.target === e.currentTarget) {
+              setIntent(null)
+              onDismissCelebrate()
+            }
           }}
         >
           <motion.div
@@ -131,45 +153,92 @@ export function CommandQuest({
               Clearance granted
             </p>
             <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-ink">
-              You cleared the vault.
+              <span aria-hidden className="mr-1.5">
+                🔐
+              </span>
+              Operator clearance unlocked.
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-              Nice work exploring the portfolio. If you&apos;re hiring or want to chat about roles, I&apos;d love to
-              connect.
+              You finished the vault tour. How do you want to proceed?
             </p>
 
-            <ul className="mt-4 space-y-1.5 text-xs text-mute">
-              {missions.map((m) => (
-                <li key={m.id} className="flex items-center gap-2 text-accent">
-                  <span aria-hidden>✓</span>
-                  <span className="text-ink-soft">{m.title}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-5 grid gap-2 sm:grid-cols-2">
-              <a
-                href={`mailto:${profile.email}?subject=Hello%20from%20your%20portfolio`}
-                className="rounded-xl bg-ink px-4 py-3 text-center text-sm font-medium text-bg transition hover:bg-accent"
+            <div className="mt-5 space-y-2">
+              {endings.map((ending) => {
+                const active = intent === ending.id
+                return (
+                  <button
+                    key={ending.id}
+                    type="button"
+                    onClick={() => setIntent(ending.id)}
+                    className={`block w-full rounded-xl border px-4 py-3 text-left transition ${
+                      active
+                        ? 'border-accent/50 bg-accent/15'
+                        : 'border-line bg-wash hover:border-accent/45 hover:bg-accent/10'
+                    }`}
+                  >
+                    <span className="block text-sm font-semibold text-ink">{ending.title}</span>
+                    <span className="mt-0.5 block text-xs text-mute">{ending.detail}</span>
+                  </button>
+                )
+              })}
+              <button
+                type="button"
+                onClick={() => {
+                  setIntent(null)
+                  onDismissCelebrate()
+                }}
+                className="block w-full rounded-xl border border-line bg-wash px-4 py-3 text-left transition hover:bg-panel"
               >
-                Contact me
-              </a>
-              <a
-                href={profile.links.resume}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-xl border border-line bg-wash px-4 py-3 text-center text-sm font-medium text-ink transition hover:border-accent/40 hover:text-accent"
-              >
-                View resume
-              </a>
+                <span className="block text-sm font-semibold text-ink">Decline mission</span>
+                <span className="mt-0.5 block text-xs text-mute">Keep browsing the vault.</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={onDismissCelebrate}
-              className="mt-3 w-full rounded-xl px-4 py-2 text-sm text-mute hover:text-ink"
+
+            <AnimatePresence initial={false}>
+              {selected ? (
+                <motion.div
+                  key={selected.id}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-4 rounded-xl border border-accent/30 bg-accent/10 p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+                      Reach out via
+                    </p>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <a
+                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(profile.email)}&su=${encodeURIComponent(selected.mailSubject)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-xl bg-ink px-3 py-2.5 text-center text-sm font-medium text-bg transition hover:bg-accent"
+                      >
+                        Gmail
+                      </a>
+                      <a
+                        href={profile.links.linkedin}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-xl border border-line bg-bg px-3 py-2.5 text-center text-sm font-medium text-ink transition hover:border-accent/40 hover:text-accent"
+                      >
+                        LinkedIn
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+
+            <a
+              href={profile.links.resume}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 block text-center text-sm text-mute transition hover:text-accent"
             >
-              Keep browsing
-            </button>
+              Inspect clearance file →
+            </a>
           </motion.div>
         </motion.div>
       ) : null}

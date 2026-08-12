@@ -166,7 +166,7 @@ export default function App() {
                   Clearance granted
                 </span>
                 <span className="mt-1 block text-sm font-semibold text-ink">
-                  Quest complete. Contact me or view resume.
+                  🔐 Operator clearance unlocked — choose your next step.
                 </span>
               </button>
             </FadeIn>
