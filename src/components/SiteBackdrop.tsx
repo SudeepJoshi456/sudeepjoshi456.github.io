@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * Dot field with scroll parallax plus a glowing "ball" that parts dots near the pointer.
+ * Dot field with a glowing ball that follows the pointer and parts nearby dots.
  */
 export function SiteBackdrop() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -31,46 +31,48 @@ export function SiteBackdrop() {
     let targetY = window.innerHeight * 0.35
     let x = targetX
     let y = targetY
-    let vx = 0
-    let vy = 0
+    let prevX = x
+    let prevY = y
     let visible = 0
     let targetVisible = 0
 
     const tick = () => {
       scroll += (targetScroll - scroll) * 0.08
-      const prevX = x
-      const prevY = y
-      x += (targetX - x) * 0.14
-      y += (targetY - y) * 0.14
-      vx = x - prevX
-      vy = y - prevY
-      visible += (targetVisible - visible) * 0.1
+      prevX = x
+      prevY = y
+      x += (targetX - x) * 0.22
+      y += (targetY - y) * 0.22
+      const vx = x - prevX
+      const vy = y - prevY
+      visible += (targetVisible - visible) * 0.12
 
       const sy = scroll * 0.12
       const sy2 = scroll * 0.22
-
-      // Soft global drift from pointer depth (kept subtle)
       const nx = (x / (window.innerWidth || 1) - 0.5) * 2
       const ny = (y / (window.innerHeight || 1) - 0.5) * 2
 
       base.style.transform = `translate3d(${nx * 8}px, ${sy + ny * 6}px, 0)`
       accent.style.transform = `translate3d(${-nx * 12}px, ${sy2 - ny * 9}px, 0)`
 
-      // Ball glow + local wake around pointer
-      const pushX = -vx * 2.8
-      const pushY = -vy * 2.8
-      const speed = Math.min(1, Math.hypot(vx, vy) / 8)
+      const speed = Math.min(1, Math.hypot(vx, vy) / 6)
 
-      glow.style.opacity = String(0.55 + visible * 0.45)
-      glow.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${1 + speed * 0.18})`
+      // Orb/shine use the same viewport coords as the cursor (fixed layer)
+      glow.style.opacity = String(0.5 + visible * 0.5)
+      glow.style.left = `${x}px`
+      glow.style.top = `${y}px`
+      glow.style.transform = `translate(-50%, -50%) scale(${1 + speed * 0.15})`
 
-      shine.style.opacity = String(0.35 + visible * 0.55 + speed * 0.2)
-      shine.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`
+      shine.style.opacity = String(0.4 + visible * 0.6 + speed * 0.15)
+      shine.style.left = `${x}px`
+      shine.style.top = `${y}px`
+      shine.style.transform = 'translate(-50%, -50%)'
 
+      // Wake is also fixed to the viewport, so mask coords match clientX/Y
       wake.style.setProperty('--spot-x', `${x}px`)
       wake.style.setProperty('--spot-y', `${y}px`)
-      wake.style.opacity = String(0.25 + visible * 0.75)
-      wake.style.transform = `translate3d(${pushX}px, ${sy * 0.4 + pushY}px, 0) scale(${1 + speed * 0.04})`
+      wake.style.opacity = String(0.2 + visible * 0.8)
+      // Part dots opposite the motion (background shift, not layer offset)
+      wake.style.backgroundPosition = `${11 - vx * 3.5}px ${11 - vy * 3.5}px`
 
       raf = requestAnimationFrame(tick)
     }
@@ -86,7 +88,7 @@ export function SiteBackdrop() {
     }
 
     const onLeave = () => {
-      targetVisible = 0.25
+      targetVisible = 0.2
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
