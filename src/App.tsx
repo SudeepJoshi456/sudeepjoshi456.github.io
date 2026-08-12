@@ -5,7 +5,7 @@ import {
   useCommandMenu,
   type DetailView,
 } from './components/CommandPalette'
-import { CommandQuest, QuestTracker, SearchPulse } from './components/CommandQuest'
+import { CommandQuest, QuestTracker, SealedVaultCard, SearchPulse } from './components/CommandQuest'
 import { CursorAura } from './components/CursorAura'
 import { DetailPanel } from './components/DetailPanel'
 import { FadeIn } from './components/FadeIn'
@@ -46,7 +46,6 @@ export default function App() {
   const [detail, setDetail] = useState<DetailView>(null)
   const [showCelebrate, setShowCelebrate] = useState(false)
   const [questProgress, setQuestProgress] = useState(0)
-  const [celebrated, setCelebrated] = useState(false)
   const { theme, toggle } = useTheme()
   const touch = useIsTouch()
   const shortcut = useShortcutLabel()
@@ -57,13 +56,16 @@ export default function App() {
     setQuestProgress((prev) => {
       if (mission !== prev + 1) return prev
       const next = prev + 1
-      if (next >= QUEST_TOTAL && !celebrated) {
-        setShowCelebrate(true)
-        setPaletteOpen(false)
+      if (next >= QUEST_TOTAL) {
+        // Close Search/detail so the sealed-vault invite can appear on the homepage.
+        queueMicrotask(() => {
+          setPaletteOpen(false)
+          setDetail(null)
+        })
       }
       return next
     })
-  }, [celebrated])
+  }, [])
 
   const finishVault = useCallback(() => {
     sessionStorage.setItem('vault-entered', '1')
@@ -96,7 +98,6 @@ export default function App() {
 
   const dismissCelebrate = () => {
     setShowCelebrate(false)
-    setCelebrated(true)
   }
 
   return (
@@ -143,18 +144,7 @@ export default function App() {
 
           {unlocked ? (
             <FadeIn delay={0.04} className="mt-8">
-              <button
-                type="button"
-                onClick={() => setShowCelebrate(true)}
-                className="w-full rounded-xl border border-accent/30 bg-accent/10 px-3 py-3 text-left transition hover:bg-accent/15"
-              >
-                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-                  Clearance granted
-                </span>
-                <span className="mt-1 block text-sm font-semibold text-ink">
-                  🔐 Operator clearance unlocked. Choose your next step.
-                </span>
-              </button>
+              <SealedVaultCard onOpen={() => setShowCelebrate(true)} />
             </FadeIn>
           ) : null}
 
@@ -331,7 +321,7 @@ export default function App() {
         visible={vaultDone && !unlocked && !showCelebrate}
       />
 
-      <CommandQuest celebrate={showCelebrate && !detail} onDismissCelebrate={dismissCelebrate} />
+      <CommandQuest celebrate={showCelebrate} onDismissCelebrate={dismissCelebrate} />
 
       <CommandPalette
         open={paletteOpen}
