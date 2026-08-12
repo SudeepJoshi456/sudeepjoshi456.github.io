@@ -50,6 +50,7 @@ export default function App() {
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [detail, setDetail] = useState<DetailView>(null)
   const [showQuest, setShowQuest] = useState(false)
+  const [showCelebrate, setShowCelebrate] = useState(false)
   const [questProgress, setQuestProgress] = useState(0)
   const { theme, toggle } = useTheme()
   const touch = useIsTouch()
@@ -60,7 +61,13 @@ export default function App() {
     setQuestProgress((prev) => {
       const next = Math.max(prev, atLeast)
       localStorage.setItem('vault-quest', String(next))
-      if (next >= QUEST_TOTAL) localStorage.setItem('vault-quest-done', '1')
+      if (next >= QUEST_TOTAL && prev < QUEST_TOTAL) {
+        localStorage.setItem('vault-quest-done', '1')
+        if (localStorage.getItem('vault-celebrated') !== '1') {
+          setShowCelebrate(true)
+          setShowQuest(false)
+        }
+      }
       return next
     })
   }, [])
@@ -114,6 +121,11 @@ export default function App() {
     localStorage.setItem('vault-quest-dismissed', '1')
   }
 
+  const dismissCelebrate = () => {
+    setShowCelebrate(false)
+    localStorage.setItem('vault-celebrated', '1')
+  }
+
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {!vaultDone ? <VaultEntrance onComplete={finishVault} /> : null}
@@ -160,28 +172,51 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setShowQuest(true)}
-                className="flex w-full items-center justify-between gap-3 rounded-xl border border-accent/25 bg-accent/8 px-3 py-2.5 text-left transition hover:bg-accent/12"
+                className="w-full rounded-xl border border-accent/30 bg-accent/10 px-3 py-3 text-left transition hover:bg-accent/15"
               >
-                <span>
-                  <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+                <span className="flex items-center justify-between gap-3">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
                     Vault quest
                   </span>
-                  <span className="mt-0.5 block text-xs text-ink-soft">
-                    {touch ? 'Tap Search to explore' : `Use ${shortcut} to explore`}, {questProgress}/
-                    {QUEST_TOTAL}
+                  <span className="text-xs font-medium text-ink">
+                    {questProgress}/{QUEST_TOTAL}
                   </span>
                 </span>
-                <span className="flex gap-1">
+                <span className="mt-2 block text-sm font-semibold text-ink">
+                  {questProgress === 0
+                    ? touch
+                      ? 'Next: Tap Search'
+                      : `Next: Press ${shortcut}`
+                    : questProgress === 1
+                      ? 'Next: Open an Experience'
+                      : 'Next: Open About or Skills'}
+                </span>
+                <span className="mt-2 flex gap-1.5">
                   {Array.from({ length: QUEST_TOTAL }).map((_, i) => (
                     <span
                       key={i}
-                      className={`h-2 w-2 rounded-full ${i < questProgress ? 'bg-accent' : 'bg-line'}`}
+                      className={`h-1.5 flex-1 rounded-full ${i < questProgress ? 'bg-accent' : 'bg-line'}`}
                     />
                   ))}
                 </span>
               </button>
             </FadeIn>
-          ) : null}
+          ) : (
+            <FadeIn delay={0.04} className="mt-8">
+              <button
+                type="button"
+                onClick={() => setShowCelebrate(true)}
+                className="w-full rounded-xl border border-accent/30 bg-accent/10 px-3 py-3 text-left transition hover:bg-accent/15"
+              >
+                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+                  Clearance granted
+                </span>
+                <span className="mt-1 block text-sm font-semibold text-ink">
+                  Quest complete. Contact me or view resume.
+                </span>
+              </button>
+            </FadeIn>
+          )}
 
           <FadeIn delay={0.06} className="mt-12">
             <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
@@ -351,12 +386,13 @@ export default function App() {
       </motion.div>
 
       <CommandQuest
-        open={showQuest && !paletteOpen && !detail}
+        open={showQuest && !paletteOpen && !detail && !showCelebrate}
         progress={questProgress}
         total={QUEST_TOTAL}
-        unlocked={unlocked}
+        celebrate={showCelebrate && !paletteOpen && !detail}
         onOpenSearch={openPalette}
         onDismiss={dismissQuest}
+        onDismissCelebrate={dismissCelebrate}
       />
 
       <CommandPalette
