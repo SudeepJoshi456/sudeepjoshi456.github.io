@@ -50,7 +50,7 @@ export function QuestTracker({
       <div className="pointer-events-auto w-full max-w-lg rounded-xl border border-accent/35 bg-panel/95 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-md">
         <div className="mb-2 flex items-center justify-between gap-2">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-            Vault quest · {progress}/{total}
+            Clearance · {progress}/{total}
           </p>
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
             {progress >= total
@@ -185,7 +185,7 @@ export function CommandQuest({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[80] flex items-end justify-center bg-[#020617]/45 px-4 pb-6 backdrop-blur-sm sm:items-center sm:pb-0"
+          className="fixed inset-0 z-[80] flex items-end justify-center bg-[#070908]/50 px-4 pb-6 backdrop-blur-sm sm:items-center sm:pb-0"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget && phase === 'open') close()
           }}
@@ -358,9 +358,9 @@ export function SearchPulse({
       aria-label="Open command menu"
       animate={{
         boxShadow: [
-          '0 0 0 0 rgba(8,145,178,0)',
-          '0 0 0 8px rgba(8,145,178,0.12)',
-          '0 0 0 0 rgba(8,145,178,0)',
+          '0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent)',
+          '0 0 0 8px color-mix(in srgb, var(--accent) 14%, transparent)',
+          '0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent)',
         ],
       }}
       transition={{ duration: 2.4, repeat: Infinity }}

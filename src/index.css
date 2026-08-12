@@ -16,34 +16,36 @@
 }
 
 :root {
-  /* cool slate + cyan */
-  --bg: #eef2f7;
-  --ink: #0d1520;
-  --ink-soft: #334155;
-  --mute: #64748b;
-  --line: #d5dee8;
-  --accent: #0e7490;
-  --accent-bright: #0891b2;
-  --wash: #e2eef5;
-  --panel: rgba(255, 255, 255, 0.82);
-  --glow: rgba(8, 145, 178, 0.14);
-  --dot: rgba(13, 21, 32, 0.14);
-  --dot-strong: rgba(14, 116, 144, 0.22);
+  /* professional vault: steel + mint */
+  --bg: #e8eeea;
+  --ink: #0c1210;
+  --ink-soft: #2f3d36;
+  --mute: #5f6f66;
+  --line: #c5d0c9;
+  --accent: #1f7a56;
+  --accent-bright: #2d9a6c;
+  --wash: #dce6e0;
+  --panel: rgba(255, 255, 255, 0.84);
+  --glow: rgba(31, 122, 86, 0.12);
+  --dot: rgba(12, 18, 16, 0.12);
+  --dot-strong: rgba(31, 122, 86, 0.2);
+  --theme-meta: #e8eeea;
 }
 
 html.dark {
-  --bg: #070b12;
-  --ink: #e8eef7;
-  --ink-soft: #a8b6c8;
-  --mute: #6b7c90;
-  --line: #1c2838;
-  --accent: #22d3ee;
-  --accent-bright: #67e8f9;
-  --wash: #101925;
-  --panel: rgba(12, 18, 28, 0.88);
-  --glow: rgba(34, 211, 238, 0.1);
-  --dot: rgba(232, 238, 247, 0.09);
-  --dot-strong: rgba(34, 211, 238, 0.18);
+  --bg: #070908;
+  --ink: #edf2ee;
+  --ink-soft: #9aada0;
+  --mute: #7d8a81;
+  --line: #1a221e;
+  --accent: #7ddea8;
+  --accent-bright: #a6ebc4;
+  --wash: #101612;
+  --panel: rgba(10, 14, 12, 0.9);
+  --glow: rgba(125, 222, 168, 0.1);
+  --dot: rgba(237, 242, 238, 0.08);
+  --dot-strong: rgba(125, 222, 168, 0.16);
+  --theme-meta: #070908;
 }
 
 @layer base {
@@ -130,7 +132,100 @@ html.dark {
   .site-backdrop__vignette {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 85% 80% at 50% 40%, transparent 45%, color-mix(in srgb, var(--bg) 75%, transparent) 100%);
+    background: radial-gradient(
+      ellipse 85% 80% at 50% 40%,
+      transparent 45%,
+      color-mix(in srgb, var(--bg) 75%, transparent) 100%
+    );
+  }
+
+  /* Quiet vault chrome: corner brackets around the main column */
+  .vault-shell {
+    position: relative;
+  }
+
+  .vault-shell::before,
+  .vault-shell::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    border-style: solid;
+    opacity: 0.7;
+  }
+
+  .vault-shell::before {
+    top: 0.65rem;
+    left: 0.65rem;
+    border-width: 1px 0 0 1px;
+  }
+
+  .vault-shell::after {
+    top: 0.65rem;
+    right: 0.65rem;
+    border-width: 1px 1px 0 0;
+  }
+
+  .vault-shell__floor {
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 0.65rem;
+    bottom: 0.65rem;
+    height: 14px;
+  }
+
+  .vault-shell__floor::before,
+  .vault-shell__floor::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 14px;
+    height: 14px;
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    border-style: solid;
+    opacity: 0.7;
+  }
+
+  .vault-shell__floor::before {
+    left: 0;
+    border-width: 0 0 1px 1px;
+  }
+
+  .vault-shell__floor::after {
+    right: 0;
+    border-width: 0 1px 1px 0;
+  }
+
+  .vault-stamp {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+    border-radius: 2px;
+    padding: 0.12rem 0.4rem;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  .vault-rail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .vault-rail__label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
   }
 
   @media (prefers-reduced-motion: no-preference) {

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import {
   CommandPalette,
@@ -17,6 +17,26 @@ import { useTheme } from './hooks/useTheme'
 
 function Arrow() {
   return <span className="mt-[0.15em] select-none text-accent">↳</span>
+}
+
+function SectionRail({
+  label,
+  stamp,
+  action,
+}: {
+  label: string
+  stamp?: string
+  action?: ReactNode
+}) {
+  return (
+    <div className="vault-rail">
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
+        <p className="vault-rail__label">{label}</p>
+        {stamp ? <span className="vault-stamp">{stamp}</span> : null}
+      </div>
+      {action}
+    </div>
+  )
 }
 
 function companyTone(company: string): 'ms' | 'amz' | 'wgi' | 'default' {
@@ -117,20 +137,27 @@ export default function App() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         style={{ visibility: vaultDone ? 'visible' : 'hidden' }}
+        className="vault-shell min-h-screen"
       >
+        <div className="vault-shell__floor" aria-hidden />
         <header className="mx-auto flex max-w-lg items-center justify-between px-5 pt-7 sm:px-6">
-          <h1 className="font-display text-[15px] font-bold tracking-tight text-ink sm:text-base">
-            {profile.name}
-          </h1>
+          <div>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-mute">
+              Professional vault
+            </p>
+            <h1 className="mt-1 font-display text-[15px] font-bold tracking-tight text-ink sm:text-base">
+              {profile.name}
+            </h1>
+          </div>
           <div className="flex items-center gap-2">
             <SearchPulse shortcut={shortcut} touch={touch} onClick={openPalette} />
             <button
               type="button"
               onClick={toggle}
               className="rounded-full border border-line px-2.5 py-1 text-[11px] text-mute transition hover:text-ink"
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+              aria-label={`Switch to ${theme === 'dark' ? 'daylight' : 'night'} vault lighting`}
             >
-              {theme === 'dark' ? 'light' : 'dark'}
+              {theme === 'dark' ? 'day' : 'night'}
             </button>
           </div>
         </header>
@@ -140,6 +167,19 @@ export default function App() {
             <p className="text-sm text-ink-soft">{profile.title}</p>
             <p className="mt-2 text-sm text-mute">{profile.school}</p>
             <p className="mt-3 text-sm font-medium text-accent">{profile.status}</p>
+            {!unlocked ? (
+              <p className="mt-4 text-sm text-ink-soft">
+                Start with{' '}
+                <button
+                  type="button"
+                  onClick={openPalette}
+                  className="font-medium text-accent underline decoration-accent/35 underline-offset-4 transition hover:decoration-accent"
+                >
+                  Search
+                </button>{' '}
+                to tour the vault.
+              </p>
+            ) : null}
           </FadeIn>
 
           {unlocked ? (
@@ -149,9 +189,7 @@ export default function App() {
           ) : null}
 
           <FadeIn delay={0.06} className="mt-12">
-            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
-              highlights
-            </p>
+            <SectionRail label="highlights" stamp="dossier" />
             <ul className="space-y-3 text-sm leading-relaxed text-ink-soft">
               {highlights.map((line) => (
                 <li key={line} className="grid grid-cols-[1rem_1fr] gap-2.5">
@@ -163,18 +201,19 @@ export default function App() {
           </FadeIn>
 
           <FadeIn delay={0.08} className="mt-12">
-            <div className="mb-4 flex items-baseline justify-between gap-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
-                experience
-              </p>
-              <button
-                type="button"
-                onClick={openPalette}
-                className="text-[11px] text-accent transition hover:underline hover:underline-offset-4"
-              >
-                search all
-              </button>
-            </div>
+            <SectionRail
+              label="experience"
+              stamp="big tech"
+              action={
+                <button
+                  type="button"
+                  onClick={openPalette}
+                  className="text-[11px] text-accent transition hover:underline hover:underline-offset-4"
+                >
+                  search vault
+                </button>
+              }
+            />
 
             <ul className="divide-y divide-line/80 border-y border-line/80">
               {bigTech.map((job) => (
@@ -207,9 +246,7 @@ export default function App() {
           </FadeIn>
 
           <FadeIn delay={0.1} className="mt-12">
-            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
-              more
-            </p>
+            <SectionRail label="more" stamp="filed" />
             <ul className="space-y-3 text-sm text-ink-soft">
               {otherExp.map((job) => (
                 <li key={job.id}>
@@ -247,9 +284,7 @@ export default function App() {
           </FadeIn>
 
           <FadeIn delay={0.11} className="mt-12">
-            <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
-              leadership
-            </p>
+            <SectionRail label="leadership" stamp="clearance" />
             <ul className="space-y-2.5 text-sm text-ink-soft">
               {leadership.slice(0, 3).map((item) => (
                 <li key={item} className="grid grid-cols-[1rem_1fr] gap-2.5">

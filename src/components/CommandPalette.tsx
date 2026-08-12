@@ -283,12 +283,12 @@ export function CommandPalette({
             if (e.target === e.currentTarget) onOpenChange(false)
           }}
         >
-          <div className="absolute inset-0 bg-[#020617]/55 backdrop-blur-md" />
+          <div className="absolute inset-0 bg-[#070908]/55 backdrop-blur-md" />
 
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Command menu"
+            aria-label="Vault index"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
@@ -297,6 +297,11 @@ export function CommandPalette({
           >
             <div className="flex justify-center pt-2 sm:hidden" aria-hidden>
               <span className="h-1 w-10 rounded-full bg-line" />
+            </div>
+            <div className="border-b border-line px-4 pt-3 sm:pt-3.5">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-mute">
+                Vault index
+              </p>
             </div>
             <div className="relative flex items-center gap-3 border-b border-line px-4 py-3.5">
               <IconTile className="border-accent/30 bg-accent/10 text-accent">
