@@ -10,6 +10,7 @@ import { BrandLogo } from './components/BrandLogo'
 import { CursorAura } from './components/CursorAura'
 import { DetailPanel } from './components/DetailPanel'
 import { FadeIn } from './components/FadeIn'
+import { SiteBackdrop } from './components/SiteBackdrop'
 import { VaultEntrance } from './components/VaultEntrance'
 import { highlightLines, profile } from './data/content'
 import { useIsTouch, useShortcutLabel } from './hooks/useDevice'
@@ -101,12 +102,7 @@ export default function App() {
       {!vaultDone ? <VaultEntrance onComplete={finishVault} /> : null}
       <CursorAura />
 
-      <div className="site-backdrop" aria-hidden>
-        <div className="site-backdrop__wash" />
-        <div className="site-backdrop__dots" />
-        <div className="site-backdrop__dots site-backdrop__dots--accent" />
-        <div className="site-backdrop__vignette" />
-      </div>
+      <SiteBackdrop />
 
       <motion.div
         initial={false}

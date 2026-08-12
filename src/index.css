@@ -96,7 +96,7 @@ html.dark {
 
 @layer components {
   .site-backdrop {
-    position: absolute;
+    position: fixed;
     inset: 0;
     z-index: -10;
     pointer-events: none;
@@ -106,10 +106,11 @@ html.dark {
 
   .site-backdrop__dots {
     position: absolute;
-    inset: -20%;
+    inset: -35%;
     background-image: radial-gradient(circle at center, var(--dot) 1.1px, transparent 1.2px);
     background-size: 22px 22px;
     opacity: 1;
+    will-change: transform;
     mask-image: radial-gradient(ellipse 75% 70% at 50% 35%, #000 35%, transparent 85%);
   }
 
@@ -119,6 +120,10 @@ html.dark {
     background-position: 11px 11px;
     opacity: 0.55;
     mask-image: radial-gradient(ellipse 55% 45% at 70% 15%, #000 10%, transparent 70%);
+  }
+
+  .site-backdrop__dots--parallax {
+    transition: none;
   }
 
   .site-backdrop__wash {
@@ -214,21 +219,6 @@ html.dark {
 
   .vault-label--quiet {
     color: var(--mute);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .site-backdrop__dots {
-      animation: dot-drift 48s linear infinite;
-    }
-  }
-
-  @keyframes dot-drift {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(22px, 22px, 0);
-    }
   }
 
   .radar-ring {
