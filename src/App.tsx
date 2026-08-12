@@ -32,7 +32,7 @@ const otherExp = experience.filter((job) => job.company !== 'Microsoft' && job.c
 const highlights = [
   '3 Big Tech internships (Microsoft, Amazon ×2)',
   'Shipped Copilot AI and Slack/AWS features used by managers in production',
-  'CS @ Alabama A&M, 4.0 GPA, open to full-time roles',
+  'CS @ Alabama A&M, 4.0 GPA, looking for new grad roles',
 ]
 
 const QUEST_TOTAL = 3
@@ -138,6 +138,7 @@ export default function App() {
           <FadeIn delay={0.02}>
             <p className="text-sm text-ink-soft">{profile.title}</p>
             <p className="mt-2 text-sm text-mute">{profile.school}</p>
+            <p className="mt-3 text-sm font-medium text-accent">{profile.status}</p>
           </FadeIn>
 
           {unlocked ? (

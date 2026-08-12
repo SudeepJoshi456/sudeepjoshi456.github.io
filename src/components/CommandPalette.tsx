@@ -91,8 +91,8 @@ export function CommandPalette({
         id: 'about',
         group: 'pages',
         title: 'About & education',
-        subtitle: 'background, schools, gpa',
-        keywords: 'about education school alabama jacksonville gpa',
+        subtitle: 'background, schools, seeking new grad roles',
+        keywords: 'about education school alabama jacksonville gpa new grad',
         icon: (
           <IconTile>
             <IconUser />

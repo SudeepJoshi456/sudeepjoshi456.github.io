@@ -2,6 +2,7 @@ export const profile = {
   name: 'Sudeep Joshi',
   title: 'Software Engineer',
   school: 'CS @ Alabama A&M (GPA 4.0)',
+  status: 'Looking for new grad software engineering roles',
   email: 'joshisudeep456@gmail.com',
   links: {
     linkedin: 'https://www.linkedin.com/in/sudeepjoshi456/',
@@ -162,6 +163,7 @@ export const recognition = [
 ]
 
 export const aboutLines = [
+  'Looking for new grad software engineering roles (graduating Dec 2026).',
   'I care about shipping software people actually use.',
   'Recently that has meant Copilot agents at Microsoft, serverless product features at Amazon, and geospatial ML in production at WGI.',
   'I move well in large codebases, write clear design docs, and own work end to end.',

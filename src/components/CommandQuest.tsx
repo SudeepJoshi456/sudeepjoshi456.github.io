@@ -100,8 +100,8 @@ const endings = [
   {
     id: 'recruit' as const,
     title: 'Recruit for a team',
-    detail: "You're hiring. Open a transmission.",
-    mailSubject: 'Vault recruit: opportunity',
+    detail: "You're hiring for new grads. Open a transmission.",
+    mailSubject: 'Vault recruit: new grad role',
   },
   {
     id: 'briefing' as const,
