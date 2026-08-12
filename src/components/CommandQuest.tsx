@@ -2,20 +2,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { profile } from '../data/content'
 import { useIsTouch, useShortcutLabel } from '../hooks/useDevice'
 
-export type Mission = {
+type Mission = {
   id: number
   title: string
   detail: string
-}
-
-type CommandQuestProps = {
-  open: boolean
-  progress: number
-  total: number
-  celebrate: boolean
-  onOpenSearch: () => void
-  onDismiss: () => void
-  onDismissCelebrate: () => void
 }
 
 export function getMissions(touch: boolean, shortcut: string): Mission[] {
@@ -88,7 +78,9 @@ export function QuestTracker({
                 <span className="min-w-0">
                   <span className={`block text-xs font-semibold ${active ? 'text-ink' : 'text-ink-soft'}`}>
                     {mission.title}
-                    {active ? <span className="ml-1.5 text-[9px] uppercase tracking-wider text-accent">now</span> : null}
+                    {active ? (
+                      <span className="ml-1.5 text-[9px] uppercase tracking-wider text-accent">now</span>
+                    ) : null}
                   </span>
                   {active ? (
                     <span className="mt-0.5 block text-[11px] leading-snug text-mute">{mission.detail}</span>
@@ -104,14 +96,12 @@ export function QuestTracker({
 }
 
 export function CommandQuest({
-  open,
-  progress,
-  total: _total,
   celebrate,
-  onOpenSearch,
-  onDismiss,
   onDismissCelebrate,
-}: CommandQuestProps) {
+}: {
+  celebrate: boolean
+  onDismissCelebrate: () => void
+}) {
   const touch = useIsTouch()
   const shortcut = useShortcutLabel()
   const missions = getMissions(touch, shortcut)
@@ -181,83 +171,6 @@ export function CommandQuest({
               Keep browsing
             </button>
           </motion.div>
-        </motion.div>
-      ) : open ? (
-        <motion.div
-          key="quest"
-          initial={{ opacity: 0, y: 18, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 12, scale: 0.98 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-5 left-1/2 z-30 w-[min(94vw,26rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-accent/30 bg-panel shadow-[0_18px_60px_rgba(0,0,0,0.22)] backdrop-blur-xl"
-        >
-          <div className="p-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">Vault quest</p>
-            <p className="mt-1 text-sm font-semibold text-ink">
-              Do these 3 steps in order. Search stays open while you explore.
-            </p>
-
-            <ol className="mt-4 space-y-2">
-              {missions.map((mission) => {
-                const done = progress >= mission.id
-                const active = !done && progress + 1 === mission.id
-                return (
-                  <li
-                    key={mission.id}
-                    className={`rounded-xl border px-3 py-2.5 ${
-                      active
-                        ? 'border-accent/50 bg-accent/12 ring-1 ring-accent/30'
-                        : done
-                          ? 'border-line/80 bg-wash/50'
-                          : 'border-line/60 bg-bg/40 opacity-70'
-                    }`}
-                  >
-                    <div className="flex items-start gap-2.5">
-                      <span
-                        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                          done
-                            ? 'bg-accent text-bg'
-                            : active
-                              ? 'bg-ink text-bg'
-                              : 'border border-line text-mute'
-                        }`}
-                      >
-                        {done ? '✓' : mission.id}
-                      </span>
-                      <span className="min-w-0">
-                        <span className={`block text-sm font-semibold ${active ? 'text-ink' : 'text-ink-soft'}`}>
-                          {mission.title}
-                          {active ? (
-                            <span className="ml-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-accent">
-                              do this next
-                            </span>
-                          ) : null}
-                        </span>
-                        <span className="mt-0.5 block text-xs leading-relaxed text-mute">{mission.detail}</span>
-                      </span>
-                    </div>
-                  </li>
-                )
-              })}
-            </ol>
-
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                onClick={onOpenSearch}
-                className="flex-1 rounded-xl bg-ink px-3 py-2.5 text-sm font-medium text-bg transition hover:bg-accent"
-              >
-                {progress === 0 ? (touch ? 'Start: Open Search' : `Start: ${shortcut}`) : 'Open Search'}
-              </button>
-              <button
-                type="button"
-                onClick={onDismiss}
-                className="rounded-xl border border-line px-3 py-2.5 text-sm text-mute hover:text-ink"
-              >
-                Later
-              </button>
-            </div>
-          </div>
         </motion.div>
       ) : null}
     </AnimatePresence>

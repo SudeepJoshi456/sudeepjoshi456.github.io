@@ -52,7 +52,6 @@ export default function App() {
   })
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [detail, setDetail] = useState<DetailView>(null)
-  const [showQuest, setShowQuest] = useState(false)
   const [showCelebrate, setShowCelebrate] = useState(false)
   const [questProgress, setQuestProgress] = useState(0)
   const { theme, toggle } = useTheme()
@@ -70,7 +69,6 @@ export default function App() {
         localStorage.setItem(QUEST_DONE_KEY, '1')
         if (localStorage.getItem(QUEST_CELEBRATED_KEY) !== '1') {
           setShowCelebrate(true)
-          setShowQuest(false)
           setPaletteOpen(false)
         }
       }
@@ -102,13 +100,6 @@ export default function App() {
     setQuestProgress(readQuestProgress())
   }, [])
 
-  useEffect(() => {
-    if (!vaultDone) return
-    if (localStorage.getItem(QUEST_DONE_KEY) === '1') return
-    const t = window.setTimeout(() => setShowQuest(true), 1200)
-    return () => window.clearTimeout(t)
-  }, [vaultDone])
-
   const openDetail = useCallback(
     (view: Exclude<DetailView, null>) => {
       setDetail(view)
@@ -117,11 +108,6 @@ export default function App() {
     },
     [completeMission],
   )
-
-  const dismissQuest = () => {
-    setShowQuest(false)
-    localStorage.setItem('vault-quest-v2-dismissed', '1')
-  }
 
   const dismissCelebrate = () => {
     setShowCelebrate(false)
@@ -169,41 +155,7 @@ export default function App() {
             <p className="mt-2 text-sm text-mute">{profile.school}</p>
           </FadeIn>
 
-          {!unlocked ? (
-            <FadeIn delay={0.04} className="mt-8">
-              <button
-                type="button"
-                onClick={() => setShowQuest(true)}
-                className="w-full rounded-xl border border-accent/30 bg-accent/10 px-3 py-3 text-left transition hover:bg-accent/15"
-              >
-                <span className="flex items-center justify-between gap-3">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-                    Vault quest
-                  </span>
-                  <span className="text-xs font-medium text-ink">
-                    {questProgress}/{QUEST_TOTAL}
-                  </span>
-                </span>
-                <span className="mt-2 block text-sm font-semibold text-ink">
-                  {questProgress === 0
-                    ? touch
-                      ? 'Next: Tap Search'
-                      : `Next: Press ${shortcut}`
-                    : questProgress === 1
-                      ? 'Next: Open About & education in Search'
-                      : 'Next: Open an Experience in Search'}
-                </span>
-                <span className="mt-2 flex gap-1.5">
-                  {Array.from({ length: QUEST_TOTAL }).map((_, i) => (
-                    <span
-                      key={i}
-                      className={`h-1.5 flex-1 rounded-full ${i < questProgress ? 'bg-accent' : 'bg-line'}`}
-                    />
-                  ))}
-                </span>
-              </button>
-            </FadeIn>
-          ) : (
+          {unlocked ? (
             <FadeIn delay={0.04} className="mt-8">
               <button
                 type="button"
@@ -218,7 +170,7 @@ export default function App() {
                 </span>
               </button>
             </FadeIn>
-          )}
+          ) : null}
 
           <FadeIn delay={0.06} className="mt-12">
             <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
@@ -393,15 +345,7 @@ export default function App() {
         visible={vaultDone && !unlocked && !showCelebrate}
       />
 
-      <CommandQuest
-        open={showQuest && !paletteOpen && !detail && !showCelebrate && !unlocked}
-        progress={questProgress}
-        total={QUEST_TOTAL}
-        celebrate={showCelebrate && !detail}
-        onOpenSearch={openPalette}
-        onDismiss={dismissQuest}
-        onDismissCelebrate={dismissCelebrate}
-      />
+      <CommandQuest celebrate={showCelebrate && !detail} onDismissCelebrate={dismissCelebrate} />
 
       <CommandPalette
         open={paletteOpen}
