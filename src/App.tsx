@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   CommandPalette,
@@ -36,14 +36,6 @@ const highlights = [
 ]
 
 const QUEST_TOTAL = 3
-const QUEST_KEY = 'vault-quest-v3'
-const QUEST_DONE_KEY = 'vault-quest-v3-done'
-const QUEST_CELEBRATED_KEY = 'vault-quest-v3-celebrated'
-
-function readQuestProgress() {
-  const n = Number(localStorage.getItem(QUEST_KEY) || '0')
-  return Number.isFinite(n) ? Math.min(QUEST_TOTAL, Math.max(0, n)) : 0
-}
 
 export default function App() {
   const [vaultDone, setVaultDone] = useState(() => {
@@ -54,27 +46,24 @@ export default function App() {
   const [detail, setDetail] = useState<DetailView>(null)
   const [showCelebrate, setShowCelebrate] = useState(false)
   const [questProgress, setQuestProgress] = useState(0)
+  const [celebrated, setCelebrated] = useState(false)
   const { theme, toggle } = useTheme()
   const touch = useIsTouch()
   const shortcut = useShortcutLabel()
   const unlocked = questProgress >= QUEST_TOTAL
 
-  /** Only advance one step at a time, in order. */
+  /** Only advance one step at a time, in order. Resets on refresh. */
   const completeMission = useCallback((mission: 1 | 2 | 3) => {
     setQuestProgress((prev) => {
       if (mission !== prev + 1) return prev
       const next = prev + 1
-      localStorage.setItem(QUEST_KEY, String(next))
-      if (next >= QUEST_TOTAL) {
-        localStorage.setItem(QUEST_DONE_KEY, '1')
-        if (localStorage.getItem(QUEST_CELEBRATED_KEY) !== '1') {
-          setShowCelebrate(true)
-          setPaletteOpen(false)
-        }
+      if (next >= QUEST_TOTAL && !celebrated) {
+        setShowCelebrate(true)
+        setPaletteOpen(false)
       }
       return next
     })
-  }, [])
+  }, [celebrated])
 
   const finishVault = useCallback(() => {
     sessionStorage.setItem('vault-entered', '1')
@@ -96,10 +85,6 @@ export default function App() {
 
   useCommandMenu(togglePalette)
 
-  useEffect(() => {
-    setQuestProgress(readQuestProgress())
-  }, [])
-
   const openDetail = useCallback(
     (view: Exclude<DetailView, null>) => {
       setDetail(view)
@@ -111,7 +96,7 @@ export default function App() {
 
   const dismissCelebrate = () => {
     setShowCelebrate(false)
-    localStorage.setItem(QUEST_CELEBRATED_KEY, '1')
+    setCelebrated(true)
   }
 
   return (
@@ -166,7 +151,7 @@ export default function App() {
                   Clearance granted
                 </span>
                 <span className="mt-1 block text-sm font-semibold text-ink">
-                  🔐 Operator clearance unlocked — choose your next step.
+                  🔐 Operator clearance unlocked. Choose your next step.
                 </span>
               </button>
             </FadeIn>
