@@ -90,8 +90,9 @@ export default function App() {
 
       <motion.div
         initial={false}
-        animate={vaultDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        style={{ visibility: vaultDone ? 'visible' : 'hidden' }}
       >
         <header className="mx-auto flex max-w-lg items-center justify-between px-5 pt-7 sm:px-6">
           <h1 className="font-display text-[15px] font-bold tracking-tight text-ink sm:text-base">

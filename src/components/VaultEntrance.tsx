@@ -26,17 +26,22 @@ export function VaultEntrance({ onComplete }: VaultEntranceProps) {
       return
     }
 
+    let completed = false
+    const finish = () => {
+      if (completed) return
+      completed = true
+      setVisible(false)
+      window.setTimeout(onComplete, 400)
+    }
+
     const timers: number[] = []
     timers.push(window.setTimeout(() => setStep(1), 700))
     timers.push(window.setTimeout(() => setStep(2), 1400))
     timers.push(window.setTimeout(() => setStep(3), 2100))
     timers.push(window.setTimeout(() => setPhase('open'), 2800))
-    timers.push(
-      window.setTimeout(() => {
-        setVisible(false)
-        window.setTimeout(onComplete, 450)
-      }, 3900),
-    )
+    timers.push(window.setTimeout(finish, 3900))
+    // Hard safety so the vault can never trap the visitor
+    timers.push(window.setTimeout(finish, 6000))
 
     const start = performance.now()
     let raf = 0

@@ -14,35 +14,37 @@ export function CursorAura() {
   const ringY = useSpring(y, { stiffness: 140, damping: 22, mass: 0.55 })
 
   useEffect(() => {
-    const fine = window.matchMedia('(pointer: fine)').matches
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (!fine || reduced) return
-    setEnabled(true)
-    document.documentElement.classList.add('has-cursor-aura')
+    try {
+      const fine = window.matchMedia('(pointer: fine)').matches
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!fine || reduced) return
+      setEnabled(true)
+      document.documentElement.classList.add('has-cursor-aura')
 
-    const move = (e: MouseEvent) => {
-      x.set(e.clientX)
-      y.set(e.clientY)
-      setVisible(true)
-    }
-    const leave = () => setVisible(false)
+      const move = (e: MouseEvent) => {
+        x.set(e.clientX)
+        y.set(e.clientY)
+        setVisible(true)
+      }
+      const leave = () => setVisible(false)
+      const over = (e: MouseEvent) => {
+        const target = e.target as HTMLElement | null
+        if (!target) return
+        setHovering(Boolean(target.closest('a, button, [role="button"], input, label')))
+      }
 
-    const over = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null
-      if (!target) return
-      const interactive = target.closest('a, button, [role="button"], input, label')
-      setHovering(Boolean(interactive))
-    }
+      window.addEventListener('mousemove', move)
+      window.addEventListener('mouseover', over)
+      document.addEventListener('mouseleave', leave)
 
-    window.addEventListener('mousemove', move)
-    window.addEventListener('mouseover', over)
-    document.addEventListener('mouseleave', leave)
-
-    return () => {
-      document.documentElement.classList.remove('has-cursor-aura')
-      window.removeEventListener('mousemove', move)
-      window.removeEventListener('mouseover', over)
-      document.removeEventListener('mouseleave', leave)
+      return () => {
+        document.documentElement.classList.remove('has-cursor-aura')
+        window.removeEventListener('mousemove', move)
+        window.removeEventListener('mouseover', over)
+        document.removeEventListener('mouseleave', leave)
+      }
+    } catch {
+      setEnabled(false)
     }
   }, [x, y])
 
@@ -52,14 +54,8 @@ export function CursorAura() {
     <>
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed top-0 left-0 z-[90] mix-blend-difference"
-        style={{
-          x: springX,
-          y: springY,
-          translateX: '-50%',
-          translateY: '-50%',
-          opacity: visible ? 1 : 0,
-        }}
+        className="pointer-events-none fixed top-0 left-0 z-[90] -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
+        style={{ x: springX, y: springY, opacity: visible ? 1 : 0 }}
       >
         <div
           className={`rounded-full bg-white transition-transform duration-200 ${
@@ -69,14 +65,8 @@ export function CursorAura() {
       </motion.div>
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed top-0 left-0 z-[89]"
-        style={{
-          x: ringX,
-          y: ringY,
-          translateX: '-50%',
-          translateY: '-50%',
-          opacity: visible ? 0.9 : 0,
-        }}
+        className="pointer-events-none fixed top-0 left-0 z-[89] -translate-x-1/2 -translate-y-1/2"
+        style={{ x: ringX, y: ringY, opacity: visible ? 0.9 : 0 }}
       >
         <div
           className={`rounded-full border border-accent/70 transition-all duration-300 ${
