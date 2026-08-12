@@ -299,7 +299,7 @@ export function CommandPalette({
               <span className="h-1 w-10 rounded-full bg-line" />
             </div>
             <div className="border-b border-line px-4 pt-3 sm:pt-3.5">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-mute">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
                 Vault index
               </p>
             </div>

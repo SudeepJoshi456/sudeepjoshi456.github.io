@@ -198,36 +198,6 @@ html.dark {
     border-width: 0 1px 1px 0;
   }
 
-  .vault-stamp {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
-    border-radius: 2px;
-    padding: 0.12rem 0.4rem;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-  }
-
-  .vault-rail {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .vault-rail__label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--mute);
-  }
-
   @media (prefers-reduced-motion: no-preference) {
     .site-backdrop__dots {
       animation: dot-drift 48s linear infinite;

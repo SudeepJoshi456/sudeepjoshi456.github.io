@@ -21,19 +21,14 @@ function Arrow() {
 
 function SectionRail({
   label,
-  stamp,
   action,
 }: {
   label: string
-  stamp?: string
   action?: ReactNode
 }) {
   return (
-    <div className="vault-rail">
-      <div className="flex min-w-0 flex-wrap items-center gap-2">
-        <p className="vault-rail__label">{label}</p>
-        {stamp ? <span className="vault-stamp">{stamp}</span> : null}
-      </div>
+    <div className="mb-4 flex items-baseline justify-between gap-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">{label}</p>
       {action}
     </div>
   )
@@ -142,7 +137,7 @@ export default function App() {
         <div className="vault-shell__floor" aria-hidden />
         <header className="mx-auto flex max-w-lg items-center justify-between px-5 pt-7 sm:px-6">
           <div>
-            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-mute">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
               Professional vault
             </p>
             <h1 className="mt-1 font-display text-[15px] font-bold tracking-tight text-ink sm:text-base">
@@ -189,7 +184,7 @@ export default function App() {
           ) : null}
 
           <FadeIn delay={0.06} className="mt-12">
-            <SectionRail label="highlights" stamp="dossier" />
+            <SectionRail label="highlights" />
             <ul className="space-y-3 text-sm leading-relaxed text-ink-soft">
               {highlights.map((line) => (
                 <li key={line} className="grid grid-cols-[1rem_1fr] gap-2.5">
@@ -203,12 +198,11 @@ export default function App() {
           <FadeIn delay={0.08} className="mt-12">
             <SectionRail
               label="experience"
-              stamp="big tech"
               action={
                 <button
                   type="button"
                   onClick={openPalette}
-                  className="text-[11px] text-accent transition hover:underline hover:underline-offset-4"
+                  className="text-xs font-medium text-accent transition hover:underline hover:underline-offset-4"
                 >
                   search vault
                 </button>
@@ -246,7 +240,7 @@ export default function App() {
           </FadeIn>
 
           <FadeIn delay={0.1} className="mt-12">
-            <SectionRail label="more" stamp="filed" />
+            <SectionRail label="more" />
             <ul className="space-y-3 text-sm text-ink-soft">
               {otherExp.map((job) => (
                 <li key={job.id}>
@@ -284,7 +278,7 @@ export default function App() {
           </FadeIn>
 
           <FadeIn delay={0.11} className="mt-12">
-            <SectionRail label="leadership" stamp="clearance" />
+            <SectionRail label="leadership" />
             <ul className="space-y-2.5 text-sm text-ink-soft">
               {leadership.slice(0, 3).map((item) => (
                 <li key={item} className="grid grid-cols-[1rem_1fr] gap-2.5">
@@ -296,7 +290,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => openDetail({ type: 'about' })}
-              className="mt-3 text-[11px] text-accent transition hover:underline hover:underline-offset-4"
+              className="mt-3 text-xs font-medium text-accent transition hover:underline hover:underline-offset-4"
             >
               View all
             </button>
