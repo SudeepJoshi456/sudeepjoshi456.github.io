@@ -1,11 +1,25 @@
-### To replicate similar portfolio website for yourself, clone this repository to your local device.
-```git clone {http link from Code tab}```
-### Install dependences:
+# Sudeep Joshi — Personal Portfolio
 
-> 1. Go to current folder ```cd {folder name}```
+React + Vite + Tailwind portfolio deployed to GitHub Pages at
+[sudeepjoshi456.github.io](https://sudeepjoshi456.github.io).
 
-> 2. ```npm install```
+## Develop
 
-### Run the file
-> ```npm run dev```
+```bash
+npm install
+npm run dev
+```
 
+## Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Deploy
+
+Pushes to `main` trigger GitHub Actions, which builds and deploys the `dist/`
+folder to GitHub Pages.
+
+In the repo settings, set **Pages → Source** to **GitHub Actions**.

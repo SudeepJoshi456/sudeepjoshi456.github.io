@@ -2,13 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/" href="/assets/sudeepLogo-DuuETY5v.png" />
+    <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sudeep Joshi</title>
-    <script type="module" crossorigin src="/assets/index-BtwxZjiR.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-B5oudQa5.css">
+    <meta
+      name="description"
+      content="Sudeep Joshi, software engineer. Internships at Microsoft, Amazon, and WGI."
+    />
+    <meta name="theme-color" content="#eef2f7" />
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem('theme');
+          const dark =
+            stored === 'dark' ||
+            (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch {}
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>sudeep joshi</title>
   </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
