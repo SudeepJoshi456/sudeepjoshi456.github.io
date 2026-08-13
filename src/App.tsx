@@ -12,6 +12,7 @@ import { DetailPanel } from './components/DetailPanel'
 import { FadeIn } from './components/FadeIn'
 import { SiteBackdrop } from './components/SiteBackdrop'
 import { VaultEntrance } from './components/VaultEntrance'
+import { VaultName } from './components/VaultName'
 import { highlightLines, profile } from './data/content'
 import { useIsTouch, useShortcutLabel } from './hooks/useDevice'
 import { useTheme } from './hooks/useTheme'
@@ -113,12 +114,7 @@ export default function App() {
       >
         <div className="vault-shell__floor" aria-hidden />
         <header className="mx-auto flex max-w-lg items-center justify-between px-5 pt-7 sm:px-6">
-          <div>
-            <p className="vault-label">Professional vault</p>
-            <h1 className="mt-1 font-display text-base font-bold tracking-tight text-ink sm:text-lg">
-              {profile.name}
-            </h1>
-          </div>
+          <VaultName name={profile.name} />
           <div className="flex items-center gap-2">
             <SearchPulse shortcut={shortcut} touch={touch} onClick={openPalette} />
             <button
